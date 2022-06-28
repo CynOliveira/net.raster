@@ -1,30 +1,35 @@
-#### Calculando a conectância da meta-rede e das redes locais ####
+#### Calculate interaction strength and its asymmetry for bipartite networks ####
 
+# Input data need to be adjacency matrices, which have one row and one column for each species in the bipartite network. The elements of the matrix can be any number, but in case of binary networks they will be either 0 or 1. A matrix element of 1 (or greater) signals that the respective column species (plants) and row species (frugivores) interact in the network. Zero signals that they do not interact.
 
-#Função criada para calcular Conectância
+## Interaction strenght (b)
 
-#Nossas matrizes originais apresentam r linhas (plantas) e c colunas (aves frugívoras) A conectividade é definida como C = I/(r·c), sendo I o total de interações  , para facilitar nosso trabalho, criamos uma lista de interações (edgelist) em que constam apenas os valores "1". Assim, podemos calcular C igualando I ao número de linhas dessa lista
-
-Connec <- function(el){
-  N_i <- nrow(el) # Total de interações é o próprio número de linhas da lista criada
-  N_birds <- length(unique(el[, 2])) # Número de espécies de aves
-  N_plants <- length(unique(el[, 1])) # Número de espécies de plantas
-  Conn <- N_i / (N_birds * N_plants) # Calculando a Conectância
-  return(Conn) # Retornando o resultado da Conectância
+b <- function(x, ...){
+  bij <- x/rowSums(x)
+  return(bij)
 }
 
-Meta.Con <- Connec(el = el.meta) #calculando conectância para a meta-rede
-
-Meta.Con
-
-# calculando a conectância para as redes locais
-
-Loc.Con <- vector(length = 25) #substituir pelo número de redes
-for(ee in 1:length(el.list)){
-  Loc.Con[ee] <- Connec(el.list[[ee]])
+## Interaction strength asymmetry (AS)
+AS <- function(x, ...){
+  bij <- x/rowSums(x)
+  bji <- x/colSums(x)
+  num <- (bij - bji)
+  den <- (bij + bji)
+  asij <- (num/den)
+  return(asij)
 }
 
-Loc.Con
+## Example
+
+net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0), nrow = 5, ncol = 5, dimnames = list(c("B1", "B2", "B3", "B4", "B5"), c("P1", "P2", "P3", "P4", "P5")))
+print(net1)
+
+net2 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1), nrow = 4, ncol = 4, dimnames = list(c("B1", "B2", "B4", "B6") , c("P2", "P5", "P6", "P7")))
+print(net2)
 
 
+b(net1)
+b(net2)
 
+AS(net1)
+AS(net2)
