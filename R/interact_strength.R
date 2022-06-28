@@ -22,6 +22,8 @@ AS <- function(x, ...){
 ## Example
 
 net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0), nrow = 5, ncol = 5, dimnames = list(c("B1", "B2", "B3", "B4", "B5"), c("P1", "P2", "P3", "P4", "P5")))
+
+net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0), nrow = 5, ncol = 5, dimnames = list(c("B1", "B2", "B3", "B4", "B5"), c("P1", "P2", "P3", "P4", "P5")))
 print(net1)
 
 net2 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1), nrow = 4, ncol = 4, dimnames = list(c("B1", "B2", "B4", "B6") , c("P2", "P5", "P6", "P7")))
