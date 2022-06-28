@@ -3,7 +3,7 @@
 
 #Função criada para calcular Conectância
 
-#Nossas matrizes originais apresentam r linhas (plantas) e c colunas (aves frugívoras) A conectividade é definida como C = I/(r·c), sendo I o total de interações realizadas.Porém, para facilitar nosso trabalho, criamos uma lista de interações (edgelist) em que constam apenas os valores "1". Assim, podemos calcular C igualando I ao número de linhas dessa lista
+#Nossas matrizes originais apresentam r linhas (plantas) e c colunas (aves frugívoras) A conectividade é definida como C = I/(r·c), sendo I o total de interações  , para facilitar nosso trabalho, criamos uma lista de interações (edgelist) em que constam apenas os valores "1". Assim, podemos calcular C igualando I ao número de linhas dessa lista
 
 Connec <- function(el){
   N_i <- nrow(el) # Total de interações é o próprio número de linhas da lista criada
