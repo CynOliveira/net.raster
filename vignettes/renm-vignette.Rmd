@@ -15,7 +15,8 @@ The goal of *renm* is to calculate and rasterize network metrics for ecological 
 This function calculates interaction strength for each specie in the network.
 ***
 ## Creating random data to test functions of the package
-### Calculating network metrics
+### Calculating network metrics from commom binary matrices of interactions. It need to be an adjacency matrix, which have one row and one column for each species in the bipartite network. The elements of the matrix can be any number, but in case of binary networks they will be either 0 or 1. A matrix element of 1 (or greater) signals that the respective column species (plants) and row species (frugivores) interact in the network.
+#' @param ... arguments to be passed to internal functions
 ***
 net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1), nrow = 4, ncol = 4, dimnames = list(c("B1", "B2", "B3", "B4"), c("P1", "P2", "P3", "P4")))
 ***
@@ -25,10 +26,11 @@ AS(net1)
 ### Spatializing interactions occurrences [in construction]
 library(terra)
 ***
-From a binary matrix with columns being "longitude", "latitude" and then all pairs of interacting species or a transposed edgelist of interactions aggregated to sites coordinates (two initial columns).
+From a binary matrix with columns being "longitude", "latitude" and then all pairs of interacting species or a transposed edgelist of interactions aggregated to two initial columns with sites coordinates.
 ***
 datarm <- as.data.frame(your_matrix, xy=TRUE)
 spac_inter <- rast(datarm, type = "xyz")
 names(sitesr) <- colnames(datarm[,-c(1,2)])
 writeRaster(sitesr, "sites_inter.tif", overwrite = TRUE)
-
+***
+### Spatializing interaction strength metrics (b and AS) [in construction]
