@@ -1,0 +1,42 @@
+---
+title: "b-vignette"
+author: Cynthia Oliveira
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{b_function-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Introduction
+The goal of *renm* is rasterizing network metrics for ecological and macroecological purposes, initially focusing on bipartite networks of mutualistic interactions.
+***
+## Functions
+### Interaction strength (b)
+This function calculates interaction strength for each specie in the network.
+***
+## Creating random data to test functions of the package
+### Calculating network metrics
+net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1), nrow = 4, ncol = 4, dimnames = list(c("B1", "B2", "B3", "B4"), c("P1", "P2", "P3", "P4")))
+b(net1)
+AS(net1)
+***
+### Spatializing interactions occurrences [in construction]
+library(terra)
+From a binary matrix with columns being "longitude", "latitude" and then all pairs of interacting species or an inverse edgelist of interactions aggregated to the coordinates, 
+datarm <- as.data.frame(yourmatrix, xy=TRUE)
+spac_inter <- rast(datarm, type = "xyz")
+names(sitesr) <- colnames(datarm[,-c(1,2)])
+writeRaster(sitesr, "sites_inter.tif", overwrite = TRUE)
+```{r}
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(renm)
+```
