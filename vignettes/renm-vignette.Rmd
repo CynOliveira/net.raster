@@ -3,7 +3,7 @@ title: "renm-vignette"
 author: Cynthia Oliveira
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{b_function-vignette}
+  %\VignetteIndexEntry{renm_function-vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
