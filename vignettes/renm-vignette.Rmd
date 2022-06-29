@@ -23,14 +23,15 @@ net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1), nrow = 4, ncol
 b(net1)
 AS(net1)
 ***
-### Spatializing interactions occurrences [in construction]
+### Spatializing interactions occurrences [under construction]
 library(terra)
 ***
 From a binary matrix with columns being "longitude", "latitude" and then all pairs of interacting species or a transposed edgelist of interactions aggregated to two initial columns with sites coordinates.
 ***
 datarm <- as.data.frame(your_matrix, xy=TRUE)
-spac_inter <- rast(datarm, type = "xyz")
-names(sitesr) <- colnames(datarm[,-c(1,2)])
-writeRaster(sitesr, "sites_inter.tif", overwrite = TRUE)
+spac_int_occ <- rast(datarm, type = "xyz")
+names(spac_int_occ) <- colnames(datarm[,-c(1,2)])
+plot(spac_int_occ)
+writeRaster(spac_occ, "sites_inter_occ.tif", overwrite = TRUE)
 ***
-### Spatializing interaction strength metrics (b and AS) [in construction]
+### Spatializing interaction strength metrics (b and AS) [under construction!]
