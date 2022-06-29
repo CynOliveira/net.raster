@@ -114,5 +114,4 @@ usethis::pr_push()
 # apagar o branch criado
 usethis::pr_finish()
 
-## RESOLVER ERRO de "commit message did not conform to UTF-8 ##
 
