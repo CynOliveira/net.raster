@@ -3,7 +3,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of testPackage is to rasterize network metrics for ecological and macroecological purposes, initially focusing on bipartite networks of mutualistic interactions. By now, it has a function for interaction strength metrics. 
+The goal of testPackage is to calculate and rasterize network metrics for ecological and macroecological purposes, initially focusing on bipartite networks of mutualistic interactions. By now, it has a function for interaction strength metrics. 
 
 ## Installation
 
