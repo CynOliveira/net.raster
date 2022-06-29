@@ -1,5 +1,5 @@
 ---
-title: "b-vignette"
+title: "renm-vignette"
 author: Cynthia Oliveira
 output: rmarkdown::html_vignette
 vignette: >
