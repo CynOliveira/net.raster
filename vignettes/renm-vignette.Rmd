@@ -7,30 +7,39 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-# *Introduction*
+
+# Introduction
 The goal of *renm* is to calculate and rasterize network metrics for ecological and macroecological purposes, initially focusing on bipartite networks of mutualistic interactions.
+
 ***
-## Functions
+
+# Functions
 ### Interaction strength (b)
 This function calculates interaction strength for each specie in the network.
+
+### Interaction strength aymetry (AS)
+This function calculates interaction strength asymmetry for each specie in the network.
+
 ***
 ## *Creating random data to test functions of the package*
-### Calculating network metrics from commom binary matrices of interactions. It need to be an adjacency matrix, which have one row and one column for each species in the bipartite network. The elements of the matrix can be any number, but in case of binary networks they will be either 0 or 1. A matrix element of 1 (or greater) signals that the respective column species (plants) and row species (frugivores) interact in the network.
+### b and AS functions
+
+We may calculate network metrics from commom binary matrices of interactions. It need to be an adjacency matrix, which have one row and one column for each species in the bipartite network. The elements of the matrix can be any number, but in case of binary networks they will be either 0 or 1. A matrix element of 1 (or greater) signals that the respective column species (plants) and row species (frugivores) interact in the network.
+
 ***
-net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1), nrow = 4, ncol = 4, dimnames = list(c("B1", "B2", "B3", "B4"), c("P1", "P2", "P3", "P4")))
-***
+
+net1 <- matrix(c(0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1), nrow = 4, ncol = 4, 
+dimnames = list(c("B1", "B2", "B3", "B4"), c("P1", "P2", "P3", "P4")))
+
+
 b(net1)
+
 AS(net1)
+
 ***
+
 ### *Spatializing interactions occurrences [under construction]*
 library(terra)
-***
-From a binary matrix with columns being "longitude", "latitude" and then all pairs of interacting species or a transposed edgelist of interactions aggregated to two initial columns with sites coordinates.
-***
-datarm <- as.data.frame(your_matrix, xy=TRUE)
-spac_int_occ <- rast(datarm, type = "xyz")
-names(spac_int_occ) <- colnames(datarm[,-c(1,2)])
-plot(spac_int_occ)
-writeRaster(spac_occ, "sites_inter_occ.tif", overwrite = TRUE)
-***
+
 ### *Spatializing interaction strength metrics (b and AS) [under construction!]*
+library(terra)
