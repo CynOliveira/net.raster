@@ -1,24 +1,51 @@
-#' @title ComputeModules_spat
+#' @title Newman's modularity for each raster cell
 #'
 #' @description Calculates modules by applying Newman's modularity measure to a
 #' weighted bipartite network. The calculation will be made for each raster
 #' cell, that is, for each subnetwork formed by the co-occurrence modeled for
-#' the pairs of interacting species.
+#' the pairs of recorded interacting species.
 #'
-#' @param x A SpatRaster containing presence-absence data (0 or 1)
-#' for a set of species. The layers (species) must be sorted according to the
-#' tree order.
-#' @param hlyr
-#' @param web A bipartite weighted graph
+#' @param x SpatRaster. Each pixel of a raster (stack) containing presence-
+#' absence data (0 or 1) for both levels species (higher or lower trophic levels)
+#' @param web Matrix. Each weighted bipartite subnetwork (in pixel) formed by the co-occurrence
+#' modeled for the pairs of recorded interacting species, where the lower level
+#' species are rows and higher level species are columns
+#' @param hlyr Logical vector indicating if the species are from higher level
+#'
 #' @inheritParams bipartite::computeModules
+#' @inheritParams backports::suppressWarnings
 #'
-#' @return SpatRaster
-#' @export
+#' @return SpatRaster object
+#'
+#' @details
+#' Note that if a network is very small, with few nodes or links, it may be
+#' impossible to calculate the metric or calculated result as it is unreliable.
+#' As the calculation is done with the subnetwork of each pixel, in cases like
+#' this there will be a warning message from the function imported from the
+#' bipartite package.Even in cases like this, it is possible to visualize the
+#' spatialized metric on a macroecological scale.
+#'
+#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @references
+#' Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
+#' modified to accommodate Beckett’s algorithm by Carsten Dormann ("bipartite"
+#' package)
+#' Beckett, S.J. 2016 Improved community detection in weighted
+#' bipartite networks. Royal Society open science 3, 140536.
+#' Dormann, C. F., and R. Strauß. 2014. Detecting modules in quantitative
+#' bipartite networks:the QuanBiMo algorithm. Methods in Ecology & Evolution 5
+#' 90–98 (and arXiv q-bio.QM 1304.3218.)
+#' Liu X. & Murata T. 2010. An Efficient Algorithm for Optimizing Bipartite
+#' Modularity in Bipartite Networks. Journal of Advanced Computational
+#' Intelligence and Intelligent Informatics (JACIII) 14408–415.
+#' Newman M.E.J. 2004. Physical Review E 70 056131
+#' Newman, M.E.J. 2006. Modularity and community structure in networks.
+#' Proceedings of the National Academy of Sciences of the United States of
+#' America, 103, 8577—8582.
 #'
 #' @examples
-#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
-#' @references Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
-#'  modified to accommodate Beckett’s algorithm by Carsten Dormann
+#'
+#' @export
 
 
 computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
@@ -54,7 +81,7 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 
 
 
-  computMod.pix <- try(bipartite::computeModules(web,
+  computMod.pix <- try(suppressWarnings(bipartite::computeModules(web,
                                                 method=method,
                                                 deep = deep,
                                                 deleteOriginalFiles =
@@ -62,7 +89,7 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
                                                 steps = steps, tolerance =
                                                 tolerance,
                                                 experimental = experimental,
-                                                forceLPA=forceLPA))
+                                                forceLPA=forceLPA)))
 
   if(!inherits(computMod.pix, "try-error")){
     resu <- computMod.pix@likelihood
@@ -72,29 +99,77 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 }
 
 
-#' computeModules for spatial data
+#' @title Newman's modularity for raster data
 #'
-#'This function takes a bipartite weighted graph and computes modules by
-#'applying Newman's modularity measure in a bipartite weighted version to it.
-#' metaComputeModules re-runs the algorithm several times, returning the most
-#' modular result, to stabilise modularity computation.
+#' @description Calculates modules by applying Newman's modularity measure to a
+#' spatial weighted bipartite network.
 #'
-#' @param rh
-#' @param rl
-#' @param web
+#' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
+#' for the higher level set of species.
+#' @param rl A SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
+#' for the lower level set of species.
+#' @param web Matrix. A weighted bipartite network matrix, binary (o or 1) or not, where
+#' the lower level species (e.g. plants) are rows and higher level (e.g.
+#' pollinators)species are columns. The layers (species) of each raster must be
+#' sorted according to the bipartite network order. The "prep_web" function test
+#' this internally, if not tested before.
 #'
-#' @return
-#' @export
+#' @inheritParams terra::app
+#' @inheritParams net.raster::prep_web
+#'
+#' @return Spatraster with the spatial Newman's modularity
+#'
+#' @details
+#' Note that if a network is very small, with few nodes or links, it may be
+#' impossible to calculate the metric or calculated result may be unreliable.
+#' As the calculation is made with the subnet of each pixel, even in cases
+#' like this, it is possible to visualize the spatialized metric on a
+#' macroecological scale.
+#'
+#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @references
+#' Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
+#' modified to accommodate Beckett’s algorithm by Carsten Dormann ("bipartite"
+#' package)
+#' Beckett, S.J. 2016 Improved community detection in weighted
+#' bipartite networks. Royal Society open science 3, 140536.
+#' Dormann, C. F., and R. Strauß. 2014. Detecting modules in quantitative
+#' bipartite networks:the QuanBiMo algorithm. Methods in Ecology & Evolution 5
+#' 90–98 (and arXiv q-bio.QM 1304.3218.)
+#' Liu X. & Murata T. 2010. An Efficient Algorithm for Optimizing Bipartite
+#' Modularity in Bipartite Networks. Journal of Advanced Computational
+#' Intelligence and Intelligent Informatics (JACIII) 14408–415.
+#' Newman M.E.J. 2004. Physical Review E 70 056131
+#' Newman, M.E.J. 2006. Modularity and community structure in networks.
+#' Proceedings of the National Academy of Sciences of the United States of
+#' America, 103, 8577—8582.
 #'
 #' @examples
-#' @author
+#' \dontrun{
+#' library(terra)
+#' library(net.raster)
+#' # load bipartite network and the raster stacks of higher level and lower level
+#' species
+#' bipnet <- read.csv(system.file("extdata", "bipnet.csv",
+#' package="net.raster"), row.names=1)
+#' rasth <- rast(system.file("extdata", "rasth.tif",
+#' package="net.raster"))
+#' rastl <- rast(system.file("extdata", "rastl.tif",
+#' package="net.raster"))
+#' # applying the function to compute Newman's modularity
+#' compMod <- computeModules_spat (rasth, rastl, bipnet)
+#' plot(compMod)
+#'
+#'
+#'}
+#' @export
 
-computeModules.spat <- function(rh, rl, web, method="Beckett", deep = FALSE,
+computeModules_spat <- function(rh, rl, web, method="Beckett", deep = FALSE,
                                 deleteOriginalFiles = TRUE,
                                 steps = 1000000, tolerance = 1e-10,
                                 experimental = FALSE, forceLPA=FALSE) {
 
-  pw <- prep.web(rh, rl, web)
+  pw <- prep_web(rh, rl, web)
 
   wlr <- terra::app(c(rh, rl),
                     computMod_vec,

@@ -3,24 +3,17 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of net.raster is to calculate interaction network metrics for raster data, initially focusing on bipartite networks.  
+The objective of net.raster is to calculate spatialized interaction network metrics for bipartite networks, using species presence-absence rasters as input, in addition to the interaction matrix. net.raster enhances the visualization of interaction patterns in space, enabling another layer beyond species distribution models (SDM). 
 
 ## Installation
 
-You can install the development version of net.raster like so:
+You can install the development version of net.raster using the following code:
 
 ``` r
 #  install.packages("devtools")
 devtools::install_github("CynOliveira/net.raster")
 ```
 
-## Example
+## Issues
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(net.raster)
-## basic example code for species and network level metrics
-
-
-```
+If you have any question or find any bug, let us know through the topic "Issues".

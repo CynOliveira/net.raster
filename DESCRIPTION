@@ -1,19 +1,29 @@
 Package: net.raster
-Title: interaction network metrics for raster data
+Title: Interaction network metrics for raster data
 Version: 0.0.0.9000
 Authors@R: 
-    person("Cynthia", "Oliveira", "cynthia.valeria.oliveira@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Funtions to calculate and rasterize network metrics for ecological and macroecological purposes, initially focusing on bipartite networks of mutualistic interactions.
+    person(c("Cynthia", Valéria), "Oliveira", , "cynthia.valeria.oliveira@gmail.com", 
+    role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0626-0535"))
+    person(c("Neander", "Marcel"), "Heming", , "neanderh@yahoo.com.br", 
+    role = "aut",
+           comment = c(ORCID = "0000-0003-2461-5045"))
+  )       
+Description: Funtions to calculate and rasterize network metrics for ecological 
+and macroecological purposes, initially focusing on bipartite networks of 
+mutualistic interactions.
 License: GPL (>= 3)
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
 URL: https://github.com/CynOliveira/net.raster
 BugReports: https://github.com/CynOliveira/net.raster/issues
+Imports: 
+    bipartite,
+    terra
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
