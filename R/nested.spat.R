@@ -65,7 +65,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #'
 #' @description Calculates any of several nestedness metrics available for
 #'  bipartite networks, which can be weighted or not, for raster data. Users may
-#'  choose one of the seven available nestedness indexes. See more about them at
+#'  choose one of the seven available nestedness indices. See more about them at
 #'  https://cran.r-project.org/web/packages/bipartite/bipartite.pdf
 #'
 #' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
@@ -75,7 +75,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' @param web Matrix. A bipartite network matrix, where the lower level species
 #' (e.g. plants) are rows and higher level (e.g. pollinators)species are columns.
 #' The layers (species) of each raster must be sorted according to the bipartite
-#' network order. The "prep_web" function test this internally, if not tested
+#' network order. The "prep.web" function test this internally, if not tested
 #' before.
 #'
 #' @inheritParams bipartite::nested
@@ -88,7 +88,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' unreliable.As the calculation is made with the subnet of each pixel, even in
 #' cases like this, it is possible to visualize the spatialized metric on a
 #' macroecological scale. See more about that and the available nestedness
-#' indexes at https://cran.r-project.org/web/packages/bipartite/bipartite.pdf
+#' indices at https://cran.r-project.org/web/packages/bipartite/bipartite.pdf
 #' We also strongly recommend that users select one method at a time for spatial
 #' calculation.
 #'
@@ -125,20 +125,20 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' @examples
 #' \dontrun{
 #' library(terra)
-#' library(net.raster)
+#' library(bipartite)
 #' # load bipartite network and the raster stacks of higher level and lower level
 #' species
 #' bipnet <- read.csv(system.file("extdata", "bipnet.csv",
-#' package="net.raster"), row.names=1)
+#' package="net.raster"), row.names=1, sep= ";" )#change separator if necessary
 #' rasth <- rast(system.file("extdata", "rasth.tif",
 #' package="net.raster"))
 #' rastl <- rast(system.file("extdata", "rastl.tif",
 #' package="net.raster"))
 #' # applying the function to compute weighted NODF (default)
-#' wNODF <- nested_spat (rasth, rastl, bipnet)
+#' wNODF <- nested.spat (rasth, rastl, bipnet)
 #' plot(wNODF)
 #' # applying the function to compute C score nestdeness
-#' Cscore <- nested_spat (rasth, rastl, bipnet, method = "C score")
+#' Cscore <- nested.spat (rasth, rastl, bipnet, method = "C score")
 #' plot(Cscore)
 #'
 #'}
@@ -147,7 +147,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 nested.spat <- function(rh, rl, web, method="weighted NODF", rescale=FALSE,
                         normalised=TRUE) {
 
-  pw <- prep_web(rh, rl, web)
+  pw <- prep.web(rh, rl, web)
 
   wlr <- terra::app(c(rh, rl),
                     nested_vec,

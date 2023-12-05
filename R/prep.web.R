@@ -30,14 +30,14 @@
 #' rastl <- rast(system.file("extdata", "rastl.tif",
 #' package="net.raster"))
 #' # applying the function to check species names on all data
-#' resu  <- prep_web (rasth, rastl, bipnet)
+#' resu  <- prep.web (rasth, rastl, bipnet)
 #' resu
 #'
 #'}
 #' @export
 #' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 
-prep_web <- function(rh, rl, web) {
+prep.web <- function(rh, rl, web) {
   sph <- names(rh)
   spl <- names(rl)
 

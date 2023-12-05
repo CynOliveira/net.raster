@@ -17,15 +17,8 @@
 #'
 #' @return SpatRaster object
 #'
-#' @details
-#' Note that if a network is very small, with few nodes or links, it may be
-#' impossible to calculate the metric or calculated result as it is unreliable.
-#' As the calculation is done with the subnetwork of each pixel, in cases like
-#' this there will be a warning message from the function imported from the
-#' bipartite package.Even in cases like this, it is possible to visualize the
-#' spatialized metric on a macroecological scale.
-#'
 #' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#'
 #' @references
 #' Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
 #' modified to accommodate Beckett’s algorithm by Carsten Dormann ("bipartite"
@@ -111,11 +104,11 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' @param web Matrix. A weighted bipartite network matrix, binary (o or 1) or not, where
 #' the lower level species (e.g. plants) are rows and higher level (e.g.
 #' pollinators)species are columns. The layers (species) of each raster must be
-#' sorted according to the bipartite network order. The "prep_web" function test
+#' sorted according to the bipartite network order. The "prep.web" function test
 #' this internally, if not tested before.
 #'
 #' @inheritParams terra::app
-#' @inheritParams net.raster::prep_web
+#' @inheritParams net.raster::prep.web
 #'
 #' @return Spatraster with the spatial Newman's modularity
 #'
@@ -147,29 +140,29 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' @examples
 #' \dontrun{
 #' library(terra)
-#' library(net.raster)
+#' library(bipartite)
 #' # load bipartite network and the raster stacks of higher level and lower level
 #' species
 #' bipnet <- read.csv(system.file("extdata", "bipnet.csv",
-#' package="net.raster"), row.names=1)
+#' package="net.raster"), row.names=1, sep= ";" )#change separator if necessary
 #' rasth <- rast(system.file("extdata", "rasth.tif",
 #' package="net.raster"))
 #' rastl <- rast(system.file("extdata", "rastl.tif",
 #' package="net.raster"))
 #' # applying the function to compute Newman's modularity
-#' compMod <- computeModules_spat (rasth, rastl, bipnet)
+#' compMod <- computeModules.spat (rasth, rastl, bipnet)
 #' plot(compMod)
 #'
 #'
 #'}
 #' @export
 
-computeModules_spat <- function(rh, rl, web, method="Beckett", deep = FALSE,
+computeModules.spat <- function(rh, rl, web, method="Beckett", deep = FALSE,
                                 deleteOriginalFiles = TRUE,
                                 steps = 1000000, tolerance = 1e-10,
                                 experimental = FALSE, forceLPA=FALSE) {
 
-  pw <- prep_web(rh, rl, web)
+  pw <- prep.web(rh, rl, web)
 
   wlr <- terra::app(c(rh, rl),
                     computMod_vec,

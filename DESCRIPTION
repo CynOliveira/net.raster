@@ -9,9 +9,7 @@ Authors@R:
     role = "aut",
            comment = c(ORCID = "0000-0003-2461-5045"))
   )       
-Description: Funtions to calculate and rasterize network metrics for ecological 
-and macroecological purposes, initially focusing on bipartite networks of 
-mutualistic interactions.
+Description: Funtions to calculate and rasterize network metrics for ecological and macroecological purposes, initially focusing on bipartite networks of mutualistic interactions.
 License: GPL (>= 3)
 URL: https://github.com/CynOliveira/net.raster
 BugReports: https://github.com/CynOliveira/net.raster/issues
