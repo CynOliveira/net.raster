@@ -28,64 +28,43 @@ nl_vec(
 )
 }
 \arguments{
+\item{x}{Vector. Each pixel of a raster (stack) containing presence-
+absence data (0 or 1) for the species of higher or lower trophic levels}
+
 \item{web}{Matrix. A weighted bipartite network matrix, binary (o or 1) or
 not, where the lower level species (e.g. plants) are rows and higher level (e.g.
 frugivores or pollinators)species are columns. The layers (species) of each
 raster must be sorted according to the bipartite network order!}
 
-\item{index}{One or more of the following (exact match only!). First the group of \dQuote{pure} network indices, then those computed for each level.
-   \itemize{
-      \item \option{connectance},
-      \item \option{web asymmetry},
-      \item \option{links per species}, 
-      \item \option{number of compartments}, 
-      \item \option{compartment diversity}, 
-      \item \option{cluster coefficient}, which will compute both the network-wide cluster coefficient as well as those for each level,
-      \item \option{nestedness} (where ties may induce variation when changing the sequence of species in \option{web}), 
-      \item \option{NODF},
-      \item \option{weighted nestedness} (where ties may induce variation when changing the sequence of species in \option{web}), 
-      \item \option{weighted NODF}, 
-      \item \option{ISA} (or alternatively \option{interaction strength asymmetry} or 
-      	\cr \option{dependence asymmetry}), 
-      \item \option{SA} (or alternatively \option{specialisation asymmetry}),
-      \item \option{linkage density}, 
-      \item \option{weighted connectance},
-      \item \option{Fisher alpha}, 
- %   \item \option{mean interaction diversity}, 
-      \item \option{interaction evenness}, 
-      \item \option{Alatalo interaction evenness}, 
-      \item \option{Shannon diversity}, 
-      \item \option{H2};  
-   } and/or those invoked through \code{\link[bipartite]{grouplevel}}:
-   \itemize{
-     \item \option{number of species} in the respective trophic level,
-     \item \option{mean number of links},
-     \item \option{mean number of shared partners},  
-     \item \option{weighted cluster coefficient},  
-     \item \option{degree distribution}, 
-     \item \option{togetherness}, 
-     \item \option{C score}, 
-     \item \option{V ratio}, 
-     \item \option{discrepancy} (where ties may induce variation when changing the sequence of species in \option{web}), 
-     \item \option{extinction slope} (where ties may induce variation when changing the sequence of species in \option{web}), 
-     \item \option{robustness} (where ties may induce variation when changing the sequence of species in \option{web}),  
-      \item \option{niche overlap},  
-      \item \option{generality},
-      \item \option{vulnerability},
-      %\item \option{effective partners}, 
-      \item \option{fc} (or alternatively \option{functional complementarity}).
-    } Furthermore, there are some groups of indices that can be called:
-    \itemize{
-      \item \option{ALL} calculates all indices (returning a list (since degree distribution fits are a table within this list and cannot be simplified)), 
-     \item \option{ALLBUTDD} (default) calculates all indices except degree distribution fits. This latter has the advantage that the output can be simplified to a vector; 
-     \item \option{info} returns more general information on the network;
-     \item \option{binary} returns a best-of selection of indices based on a binary network;
-     \item \option{quantitative} returns a best-of selection of indices based on quantitative networks;
-     \item \option{topology} returns indices more abstractly describing network properties. Also CHECK details below!
-     }
-   }
+\item{hlyr}{Logical vector indicating if the species are from higher level}
 
-\item{level}{For which level should the level-specific indices be computed: \option{both} (default), \option{lower} or \option{higher}?}
+\item{index}{Vector of indices to be calculated for each trophic level of the web;
+            options are: 
+    \itemize{
+       		\item \option{degree}, 
+		\item \option{ND} for normalised degrees, 
+		%\item \option{dependence}, 
+		\item \option{species strength} as sum of dependencies for each species, 
+		\item \option{nestedrank} as rank in a nested matrix,
+		\item \option{interaction push pull} for interaction push/pull (our version of dependence asymmetry: see details),  
+	        	\item \option{PDI} for Paired Differences Index, 
+	        	\item \option{resource range} for Poisot et al. (2012)'s index of unused resources,
+	        	\item \option{species specificity} (or coefficient of variation of interactions),
+        		\item \option{PSI} for pollination service index (or pollinator support index, depending on the trophic level), 
+	        	\item \option{NS} for node specialisation index, 
+		\item \option{betweenness} for betweenness, 
+		\item \option{closeness} (both automatically also return their weighted counterparts proposed by Tore Opsahl in package \pkg{tnet}),
+        		\item \option{Fisher} for Fisher's alpha index, 
+		\item \option{diversity} for Shannon diversity of interactions of that species, 
+		\item \option{effective partners} for the effective number of interacting partners,  
+		\item\option{proportional generality} a quantitative version of normalised degree,
+		\item\option{proportional similarity} specialisation measured as similarity between use and availability,
+		\item \option{d} for Blüthgen's d', 
+		\item \option{ALL} for all the aforementioned. 
+	        	\item \option{ALLBUTD} (default) excludes only the dependence matrix and leads to the output being simplified to a matrix per trophic level.}
+            }
+
+\item{level}{For which level(s) should the indices be computed? Options are \option{both} (default), \option{lower} and \option{higher}. Output for one trophic level will be returned as a data.frame (unless dependencies are also reported), while for two levels a list of two matrices (higher and lower) will be returned.}
 
 \item{weighted}{Logical; should the weighted average be computed for indices that are averaged across species (at the group level)? Defaults to TRUE.}
 
@@ -103,9 +82,9 @@ raster must be sorted according to the bipartite network order!}
 
 \item{normalise}{Logical; shall the C-score and togetherness metrics be normalised to a range of 0 to 1? Defaults to \code{TRUE}.}
 
-\item{empty.web}{Shall the empty columns and rows be deleted? Defaults to TRUE.}
+\item{empty.web}{Shall the empty columns and rows be deleted? Defaults to TRUE. option FALSE not yet fully tested}
 
-\item{logbase}{Shall the various diversity indices (linkage density, partner diversity, generality/vulnerability, interaction evenness) be calculated to the base of e (default) or 2? Log2 is the proposal for generality and vulnerability by Bersier et al. (2002), while Shannon uses ln. The choice of the base will not affect the results qualitatively, at most by a scaling factor. Note that for all these indices, we follow common practice and define 0 * log(0) = 0.}
+\item{logbase}{numeric; gives the base to which the various diversity indices (partner diversity, effective partners) shallb be calculated, typcially exp(1) (default) or 2. Log2 is the proposal for generality and vulnerability by Bersier et al. (2002), while Shannon typically uses the natural logarithm, ln. The choice of the base will not affect the results qualitatively, only by a scaling factor.}
 
 \item{intereven}{Shall all cells of the matrix be used to calculate the interaction evenness \cr
   (\option{intereven = "prod"})? Or, as given by Bersier et al. (2002) and Tylianakis et al. (2007), should only the realised links be used (\option{intereven = "sum"}; default)? Prod and sum refer to using the log of the \bold{product} of matrix dimensions (i.e. all cells) or the log of the \bold{sum} of non-zero cells (i.e. number of links)  as denominator in the evenness formula. See last paragraph of the details-section for views on these two options!}

@@ -5,7 +5,7 @@
 #' calculation will be made for each raster cell, that is, for each subnetwork
 #' formed by the co-occurrence modeled for the pairs of recorded interacting species.
 #'
-#' @inheritParams specieslevel.spat
+#' @inheritParams sl_vec
 #' @inheritParams bipartite::nested
 #'
 #' @return Vector
@@ -137,7 +137,7 @@ nested.spat <- function(rh, rl, web, method="weighted NODF", rescale=FALSE,
 
   pw <- prep.web(rh, rl, web)
 
-  if(index=="ALL"){
+  if(method=="ALL"){
     stop("You must calculate one nested index at a time")
   }
 

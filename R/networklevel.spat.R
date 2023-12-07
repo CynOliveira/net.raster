@@ -4,7 +4,7 @@
 #' of each pixel, formed by the co-occurrence modeled for the pairs of recorded
 #' interacting species.
 #'
-#' @inheritParams specieslevel.spat
+#' @inheritParams sl_vec
 #' @inheritParams bipartite::networklevel
 #'
 #' @return Vector

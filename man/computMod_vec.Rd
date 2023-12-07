@@ -18,10 +18,15 @@ computMod_vec(
 )
 }
 \arguments{
+\item{x}{Vector. Each pixel of a raster (stack) containing presence-
+absence data (0 or 1) for the species of higher or lower trophic levels}
+
 \item{web}{Matrix. A weighted bipartite network matrix, binary (o or 1) or
 not, where the lower level species (e.g. plants) are rows and higher level (e.g.
 frugivores or pollinators)species are columns. The layers (species) of each
 raster must be sorted according to the bipartite network order!}
+
+\item{hlyr}{Logical vector indicating if the species are from higher level}
 
 \item{method}{Choice between the algorithm(s) provided by Stephen Beckett (2016) or Dormann & Strauss (2016) (\option{method="DormannStrauss"}). Defaults to the much faster and in the majority of cases better algorithm of Beckett. (Note the optional argument \option{forceLPA} to use his slightly inferior but even faster pure LPA algorithm.)}
 

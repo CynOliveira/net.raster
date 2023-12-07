@@ -5,7 +5,7 @@
 #' cell, that is, for each subnetwork formed by the co-occurrence modeled for
 #' the pairs of recorded interacting species.
 #'
-#' @inheritParams specieslevel.spat
+#' @inheritParams sl_vec
 #' @inheritParams bipartite::computeModules
 #'
 #' @return Vector

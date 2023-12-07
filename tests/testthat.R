@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(renm)
+library(net.raster)
 
-test_check("renm")
+test_check("net.raster")
