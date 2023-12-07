@@ -10,7 +10,7 @@ sl_vec(
   hlyr,
   index = "closeness",
   level = "both",
-  weighted = F,
+  weighted = FALSE,
   logbase = exp(1),
   low.abun = NULL,
   high.abun = NULL,
@@ -61,6 +61,8 @@ raster must be sorted according to the bipartite network order!}
 
 \item{level}{For which level(s) should the indices be computed? Options are \option{both} (default), \option{lower} and \option{higher}. Output for one trophic level will be returned as a data.frame (unless dependencies are also reported), while for two levels a list of two matrices (higher and lower) will be returned.}
 
+\item{weighted}{Logical}
+
 \item{logbase}{numeric; gives the base to which the various diversity indices (partner diversity, effective partners) shallb be calculated, typcially exp(1) (default) or 2. Log2 is the proposal for generality and vulnerability by Bersier et al. (2002), while Shannon typically uses the natural logarithm, ln. The choice of the base will not affect the results qualitatively, only by a scaling factor.}
 
 \item{low.abun}{Optional vector of independent abundances of the \emph{lower} trophic level to be passed on to \code{\link[bipartite]{dfun}} and used as `resource availability' in indices proportional similarity and proportional generality.}
@@ -87,47 +89,6 @@ Calculate various simple numbers and indices related to network
 nodes (species) for each pixel. The calculation will be made for each raster
 cell, that is, for each subnetwork formed by the co-occurrence modeled for
 the pairs of recorded interacting species.
-}
-\references{
-Carsten F. Dormann & Jochen Fründ ("bipartite" package)
-Alarcon, R., Waser, N.M. and Ollerton, J. 2008. Year-to-year variation in the
-topology of a plantpollinator interaction network. Oikos 117, 1796–1807
-Barrat, A., M. Barthélemy, R. Pastor-Satorras, and A. Vespignani. 2004. The
-architecture of complex weighted networks. Proceedings of the National Academy
-of Sciences of the USA 101, 3747—3752. doi: 10.1073/pnas.0400087101.
-Bascompte, J., Jordano, P. and Olesen, J. M. (2006) Asymmetric coevolutionary
-networks facilitate biodiversity maintenance. Science 312, 431–433
-Berlow, E. L., A. M. Neutel, J. E. Cohen, P. C. de Ruiter, B. Ebenman, M.
-Emmerson, J. W. Fox,V. A. A. Jansen, J. I. Jones, G. D. Kokkoris, D. O.
-Logofet, A. J. McKane, J. M. Montoya & O.
-Petchey (2004) Interaction strengths in food webs: issues and opportunities.
-Journal of Animal Ecology 73, 585-–598
-Blüthgen, N., Menzel, F. and Blüthgen, N. (2006) Measuring specialization
-in species interaction networks. BMC Ecology 6, 9
-Dormann, C.F. (2011) How to be a specialist? Quantifying specialisation in
-pollination networks.Network Biology 1, 1–20
-Feinsinger, P., Spears, E.E. and Poole,R. W. (1981) A simple measure of
-niche breadth. Ecology 62, 27–32.
-Julliard, R., Clavel, J., Devictor, V., Jiguet, F. and Couvet, D. (2006)
-Spatial segregation of specialists and generalists in bird communities.
-Ecology Letters 9, 1237-–1244
-Martín Gonzáles, A.M., Dalsgaard, B. and Olesen, J.M. (2010) Centrality
-measures and the importance of generalist species in pollination networks.
-Ecological Complexity, 7, 36–43
-Opsahl, T. & Panzarasa, P. (2009). Clustering in weighted networks. Social
-Networks, 31, 155–163
-Poisot, T., Lepennetier, G., Martinez, E., Ramsayer, J., and Hochberg, M.E.
-(2011a) Resource availability affects the structure of a natural bacteria-
-bacteriophage community. Biology Letters 7,201–204
-Poisot, T., Bever, J.D., Nemri, A., Thrall, P.H., and Hochberg, M.E. (2011b)
-A conceptual framework for the evolution of ecological specialisation.
-Ecology Letters 14, 841–851
-Poisot, T., E. Canard, N. Mouquet, and M. E. Hochberg (2012) A comparative
-study of ecological specialization estimators. Methods in Ecology and
-Evolution 3, 537-–544. doi: 10.1111/j.2041-210X.2011.00174.x.
-Vázquez, D. P., Melian, C. J., Williams, N. M., Blüthgen N., Krasnov B. R.
-and Poulin, R. (2007) Species abundance and asymmetric interaction strength
-in ecological networks. Oikos 116, 1120–1127
 }
 \author{
 Neander Marcel Heming and Cynthia Valéria Oliveira

@@ -11,45 +11,6 @@
 #'
 #' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
-#' @references
-#'  Carsten F. Dormann
-#'  Almeida-Neto, M., Loyola, R.D., Ulrich, W., Guimaraes, P., Guimaraes, Jr.,
-#'  P.R. 2008. A consistent metric for nestedness analysis in ecological systems:
-#'  reconciling concept and measurement. Oikos 117, 1227–1239
-#'  Almeida-Neto, M. & Ulrich, W. (2011) A straightforward computational approach
-#'  for measuringnestedness using quantitative matrices. Environmental Modelling
-#'  & Software 26, 173–178
-#'  Bascompte, J., Jordano, P. and Olesen, J. M. 2006 Asymmetric coevolutionary
-#'  networks facilitate biodiversity maintenance. Science 312, 431–433
-#'  Bersier, L. F., Banasek-Richter, C. and Cattin, M. F. (2002) Quantitative
-#'  descriptors of food-web matrices. Ecology 83, 2394–2407
-#'  Blüthgen, N. (2010) Why network analysis is often disconnected from community
-#'  ecology: A critique and an ecologist’s guide. Basic and Applied Ecology 11,
-#'  185–195
-#'  Blüthgen, N., Menzel, F., Hovestadt, T., Fiala, B. and Blüthgen N. 2007
-#'  Specialization, constraints and conflicting interests in mutualistic networks.
-#'  Current Biology 17, 1–6
-#'  Burgos, E., H. Ceva, R.P.J. Perazzo, M. Devoto, D. Medan, M. Zimmermann, and
-#'  A. Maria Delbue (2007) Why nestedness in mutualistic networks? Journal of
-#'  Theoretical Biology 249, 307–313
-#'  Corso G, de Araújo AIL, de Almeida AM (2008) A new nestedness estimator in
-#'  community networks. arXiv 0803.0007v1 [physics.bio-ph]
-#'  Devoto M., Bailey S., Craze P., and Memmott J. (2012) Understanding and
-#'  planning ecological restoration of plant-pollinator networks. Ecology Letters
-#'  15, 319–328. http://dx.doi.org/10.1111/j.1461-0248.2012.01740.x
-#'  Dormann, C.F., Fründ, J., Blüthgen, N., and Gruber, B. (2009) Indices, graphs
-#'  and null models: analysing bipartite ecological networks. The Open Ecology
-#'  Journal 2, 7–24.
-#'  Dunne, J. A., R. J. Williams, and N. D. Martinez. 2002 Food-web structure
-#'  and network theory: the role of connectance and size. Proceedings of the
-#'  National Academy of Science USA 99, 12917–12922
-#'  Galeano, J., Pastor, J.M. and Iriondo, J.M. (2008) Weighted-Interaction
-#'  Nestedness Estimator (WINE): A new estimator to calculate over frequency
-#'  matrices. arXiv 0808.3397v1 [physics.bio-ph]
-#'  Gotelli, N. J., and G. R. Graves. 1996 Null Models in Ecology. Smithsonian
-#'  Institution Press, Washington D.C.
-#'  Krebs, C. J. 1989. Ecological Methodology. Harper Collins, New York.
-#'
 #' @export
 #'
 nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
@@ -115,6 +76,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' compute nestedness. View all available indexes in Details.
 #'
 #' @inheritParams prep.web
+#' @inheritParams nl_vec
 #' @inheritParams terra::app
 #'
 #' @return Spatraster with the choose network level metric
@@ -193,7 +155,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #'  A. Maria Delbue (2007) Why nestedness in mutualistic networks? Journal of
 #'  Theoretical Biology 249, 307–313
 #'  Corso G, de Araújo AIL, de Almeida AM (2008) A new nestedness estimator in
-#'  community networks. arXiv 0803.0007v1 [physics.bio-ph]
+#'  community networks.
 #'  Devoto M., Bailey S., Craze P., and Memmott J. (2012) Understanding and
 #'  planning ecological restoration of plant-pollinator networks. Ecology Letters
 #'  15, 319–328. http://dx.doi.org/10.1111/j.1461-0248.2012.01740.x
@@ -205,7 +167,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #'  National Academy of Science USA 99, 12917–12922
 #'  Galeano, J., Pastor, J.M. and Iriondo, J.M. (2008) Weighted-Interaction
 #'  Nestedness Estimator (WINE): A new estimator to calculate over frequency
-#'  matrices. arXiv 0808.3397v1 [physics.bio-ph]
+#'  matrices.
 #'  Gotelli, N. J., and G. R. Graves. 1996 Null Models in Ecology. Smithsonian
 #'  Institution Press, Washington D.C.
 #'  Krebs, C. J. 1989. Ecological Methodology. Harper Collins, New York.

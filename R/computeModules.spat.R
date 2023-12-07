@@ -12,24 +12,6 @@
 #'
 #' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
-#' @references
-#' Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
-#' modified to accommodate Beckett’s algorithm by Carsten Dormann ("bipartite"
-#' package)
-#' Beckett, S.J. 2016 Improved community detection in weighted
-#' bipartite networks. Royal Society open science 3, 140536.
-#' Dormann, C. F., and R. Strauß. 2014. Detecting modules in quantitative
-#' bipartite networks:the QuanBiMo algorithm. Methods in Ecology & Evolution 5
-#' 90–98 (and arXiv q-bio.QM 1304.3218.)
-#' Liu X. & Murata T. 2010. An Efficient Algorithm for Optimizing Bipartite
-#' Modularity in Bipartite Networks. Journal of Advanced Computational
-#' Intelligence and Intelligent Informatics (JACIII) 14408–415.
-#' Newman M.E.J. 2004. Physical Review E 70 056131
-#' Newman, M.E.J. 2006. Modularity and community structure in networks.
-#' Proceedings of the National Academy of Sciences of the United States of
-#' America, 103, 8577—8582.
-#'
-#'
 #' @export
 
 
@@ -95,6 +77,7 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' View more about it at  \link[bipartite]{computeModules}
 #'
 #' @inheritParams prep.web
+#' @inheritParams computMod_vec
 #' @inheritParams terra::app
 #'
 #' @return Spatraster with the spatial Newman's modularity

@@ -1,9 +1,9 @@
 test_that("returned object classes are correct", {
 
   # load data
-  rasth <- rast(system.file("extdata", "rasth.tif",
+  rasth <- terra::rast(system.file("extdata", "rasth.tif",
                             package="net.raster"))
-  rastl <- rast(system.file("extdata", "rastl.tif",
+  rastl <- terra::rast(system.file("extdata", "rastl.tif",
                             package="net.raster"))
   bipnet <- read.csv(system.file("extdata", "bipnet.csv",
                                   package="net.raster"), row.names=1, sep= ";" )
@@ -17,9 +17,9 @@ test_that("returned object classes are correct", {
 test_that("error is returned when an argument is missing", {
 
   # load data
-  rasth <- rast(system.file("extdata", "rasth.tif",
+  rasth <- terra::rast(system.file("extdata", "rasth.tif",
                             package="net.raster"))
-  rastl <- rast(system.file("extdata", "rastl.tif",
+  rastl <- terra::rast(system.file("extdata", "rastl.tif",
                             package="net.raster"))
   bipnet <- read.csv(system.file("extdata", "bipnet.csv",
                                  package="net.raster"), row.names=1, sep= ";" )

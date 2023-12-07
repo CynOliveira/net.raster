@@ -63,6 +63,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' about them at \link[bipartite]{nested}
 #'
 #' @inheritParams prep.web
+#' @inheritParams nested_vec
 #' @inheritParams terra::app
 #'
 #' @return Spatraster with the nestedness metric required
@@ -97,7 +98,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #'  explained by an integrative hypothesis of specialization. bioRxiv
 #'  Galeano, J., Pastor, J.M., Iriondo and J.M. 2008. Weighted-Interaction
 #'  Nestedness Estimator (WINE): A new estimator to calculate over frequency
-#'  matrices. arXiv 0808.3397v2 [physics.bio-ph]
+#'  matrices.
 #'  Rodríguez-Gironés, M.A. and Santamaría, L. 2006. A new algorithm to calculate
 #'  the nestedness temperature of presence-absence matrices. J. Biogeogr. 33,
 #'  924–935.

@@ -10,7 +10,7 @@ specieslevel.spat(
   web,
   index = "closeness",
   level = "both",
-  weighted = F,
+  weighted = FALSE,
   logbase = exp(1),
   low.abun = NULL,
   high.abun = NULL,
@@ -33,6 +33,54 @@ for the lower level set of species.}
 not, where the lower level species (e.g. plants) are rows and higher level (e.g.
 frugivores or pollinators)species are columns. The layers (species) of each
 raster must be sorted according to the bipartite network order!}
+
+\item{index}{Vector of indices to be calculated for each trophic level of the web;
+            options are: 
+    \itemize{
+       		\item \option{degree}, 
+		\item \option{ND} for normalised degrees, 
+		%\item \option{dependence}, 
+		\item \option{species strength} as sum of dependencies for each species, 
+		\item \option{nestedrank} as rank in a nested matrix,
+		\item \option{interaction push pull} for interaction push/pull (our version of dependence asymmetry: see details),  
+	        	\item \option{PDI} for Paired Differences Index, 
+	        	\item \option{resource range} for Poisot et al. (2012)'s index of unused resources,
+	        	\item \option{species specificity} (or coefficient of variation of interactions),
+        		\item \option{PSI} for pollination service index (or pollinator support index, depending on the trophic level), 
+	        	\item \option{NS} for node specialisation index, 
+		\item \option{betweenness} for betweenness, 
+		\item \option{closeness} (both automatically also return their weighted counterparts proposed by Tore Opsahl in package \pkg{tnet}),
+        		\item \option{Fisher} for Fisher's alpha index, 
+		\item \option{diversity} for Shannon diversity of interactions of that species, 
+		\item \option{effective partners} for the effective number of interacting partners,  
+		\item\option{proportional generality} a quantitative version of normalised degree,
+		\item\option{proportional similarity} specialisation measured as similarity between use and availability,
+		\item \option{d} for Blüthgen's d', 
+		\item \option{ALL} for all the aforementioned. 
+	        	\item \option{ALLBUTD} (default) excludes only the dependence matrix and leads to the output being simplified to a matrix per trophic level.}
+            }
+
+\item{level}{For which level(s) should the indices be computed? Options are \option{both} (default), \option{lower} and \option{higher}. Output for one trophic level will be returned as a data.frame (unless dependencies are also reported), while for two levels a list of two matrices (higher and lower) will be returned.}
+
+\item{weighted}{Logical}
+
+\item{logbase}{numeric; gives the base to which the various diversity indices (partner diversity, effective partners) shallb be calculated, typcially exp(1) (default) or 2. Log2 is the proposal for generality and vulnerability by Bersier et al. (2002), while Shannon typically uses the natural logarithm, ln. The choice of the base will not affect the results qualitatively, only by a scaling factor.}
+
+\item{low.abun}{Optional vector of independent abundances of the \emph{lower} trophic level to be passed on to \code{\link[bipartite]{dfun}} and used as `resource availability' in indices proportional similarity and proportional generality.}
+
+\item{high.abun}{Optional vector of independent abundances of the \emph{higher} trophic level to be passed on to \code{\link[bipartite]{dfun}} and used as `resource availability' in indices proportional similarity and proportional generality.}
+
+\item{PDI.normalise}{Logical; should the normalised PDI be computed? Defaults to TRUE. See function \code{\link[bipartite]{PDI}} for details and reasoning.}
+
+\item{PSI.beta}{A length 2 vector of parameter determining the effect of floral constancy and pollen mixing on the proportion of same-species pollen delivered to a plant. Defaults to \code{c(1, 0)}. See section details for details.}
+
+\item{nested.method}{One of \option{NODF}, \option{binmatnest}, \option{wine} or \option{sort}. See \code{\link[bipartite]{nestedrank}} for details.}
+
+\item{nested.normalised}{Logical; defaulting to TRUE. Divides the nestedrank-1 by the number of species -1, thereby ranging it between 0 (most generalist) and 1 (most specialised). Species sequences from different networks are now comparable.}
+
+\item{nested.weighted}{Logical; should the ``nestedrank'' be computed based on weighted network (default) or binary version (FALSE)?}
+
+\item{empty.web}{Shall the empty columns and rows be deleted? Defaults to TRUE. option FALSE not yet fully tested}
 }
 \value{
 Spatraster object with the choose species level metric for both

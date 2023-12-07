@@ -38,6 +38,65 @@ for the lower level set of species.}
 not, where the lower level species (e.g. plants) are rows and higher level (e.g.
 frugivores or pollinators)species are columns. The layers (species) of each
 raster must be sorted according to the bipartite network order!}
+
+\item{index}{Vector of indices to be calculated for each trophic level of the web;
+            options are: 
+    \itemize{
+       		\item \option{degree}, 
+		\item \option{ND} for normalised degrees, 
+		%\item \option{dependence}, 
+		\item \option{species strength} as sum of dependencies for each species, 
+		\item \option{nestedrank} as rank in a nested matrix,
+		\item \option{interaction push pull} for interaction push/pull (our version of dependence asymmetry: see details),  
+	        	\item \option{PDI} for Paired Differences Index, 
+	        	\item \option{resource range} for Poisot et al. (2012)'s index of unused resources,
+	        	\item \option{species specificity} (or coefficient of variation of interactions),
+        		\item \option{PSI} for pollination service index (or pollinator support index, depending on the trophic level), 
+	        	\item \option{NS} for node specialisation index, 
+		\item \option{betweenness} for betweenness, 
+		\item \option{closeness} (both automatically also return their weighted counterparts proposed by Tore Opsahl in package \pkg{tnet}),
+        		\item \option{Fisher} for Fisher's alpha index, 
+		\item \option{diversity} for Shannon diversity of interactions of that species, 
+		\item \option{effective partners} for the effective number of interacting partners,  
+		\item\option{proportional generality} a quantitative version of normalised degree,
+		\item\option{proportional similarity} specialisation measured as similarity between use and availability,
+		\item \option{d} for Blüthgen's d', 
+		\item \option{ALL} for all the aforementioned. 
+	        	\item \option{ALLBUTD} (default) excludes only the dependence matrix and leads to the output being simplified to a matrix per trophic level.}
+            }
+
+\item{level}{For which level(s) should the indices be computed? Options are \option{both} (default), \option{lower} and \option{higher}. Output for one trophic level will be returned as a data.frame (unless dependencies are also reported), while for two levels a list of two matrices (higher and lower) will be returned.}
+
+\item{weighted}{Logical}
+
+\item{ISAmethod}{Method to use for calculating interaction strength (= dependence) asymmetry; original by \option{Bascompte} is yielding artefact results based only on the asymmetry of the web (as shown by example in Blüthgen et al. 2007 analytically in Blüthgen 2010) and should hence be avoided; \option{Bluethgen} (default) excludes singletons and corrects for low number of interactions (range -1 to 1).}
+
+\item{SAmethod}{How to aggregate d'-based specialisation values: mean of log-transformed dependencies (\option{log}) or Blüthgen's marginal totals-weighted mean (default); see Blüthgen et al. (2007).}
+
+\item{extinctmethod}{Specifies how species are removed from matrix: \option{random}, \option{degree} or \option{abundance} (partial matching). See \code{\link[bipartite]{second.extinct}} for details an option to predefine the sequence externally; idea from Memmott et al. (2004).}
+
+\item{nrep}{Number of replicates for the extinction sequence analysis.}
+
+\item{CCfun}{Method to use when calculating the clustering coefficient. Originally proposed as mean of cluster coefficients for each species. Defaults to \option{median}, because cluster coefficients are strongly skewed. }
+
+\item{dist}{Distance metric to be used to calculate niche overlap. Any of \pkg{vegan}'s \code{vegdist}-metrics can be used; defaults to Horn's index, which is the recommendation of Krebs (1989). Binary percent niche overlap would be computed with \cr  \option{dist = "jaccard"}.}
+
+\item{normalise}{Logical; shall the C-score and togetherness metrics be normalised to a range of 0 to 1? Defaults to \code{TRUE}.}
+
+\item{empty.web}{Shall the empty columns and rows be deleted? Defaults to TRUE. option FALSE not yet fully tested}
+
+\item{logbase}{numeric; gives the base to which the various diversity indices (partner diversity, effective partners) shallb be calculated, typcially exp(1) (default) or 2. Log2 is the proposal for generality and vulnerability by Bersier et al. (2002), while Shannon typically uses the natural logarithm, ln. The choice of the base will not affect the results qualitatively, only by a scaling factor.}
+
+\item{intereven}{Shall all cells of the matrix be used to calculate the interaction evenness \cr
+  (\option{intereven = "prod"})? Or, as given by Bersier et al. (2002) and Tylianakis et al. (2007), should only the realised links be used (\option{intereven = "sum"}; default)? Prod and sum refer to using the log of the \bold{product} of matrix dimensions (i.e. all cells) or the log of the \bold{sum} of non-zero cells (i.e. number of links)  as denominator in the evenness formula. See last paragraph of the details-section for views on these two options!}
+
+\item{H2_integer}{Logical; indicates whether values in web are integers. Passed on to \code{\link[bipartite]{H2fun}}; see there for details.}
+
+\item{fcweighted}{Logical; when computing ``functional complementarity'' sensu function \code{\link[bipartite]{fc}}, should the weights of the matrix be used. Defaults to TRUE, but original paper (Devoto et al. 2012) is based on FALSE.}
+
+\item{fcdist}{Distance measure to be used to compute functional complementarity through \code{\link[bipartite]{fc}}; any measure accepted by \code{\link{dist}} is acceptable.}
+
+\item{legacy}{Logical; should the old (pre-2.00) version of \code{networklevel} be used? To be backward compatible, the old \code{networklevel}-function is still available (\code{.networklevel}) and can be called by setting \option{legacy=TRUE}. This is only for the transition period until all papers in the making have been published (or binned). Index names and sometimes unclear focal level were downsides of the old implementation, which is now remedied. Thus, the use of \option{legacy=TRUE} and the direct call of \code{.networklevel} are strongly discouraged!}
 }
 \value{
 Spatraster with the choose network level metric
@@ -142,7 +201,7 @@ Burgos, E., H. Ceva, R.P.J. Perazzo, M. Devoto, D. Medan, M. Zimmermann, and
 A. Maria Delbue (2007) Why nestedness in mutualistic networks? Journal of
 Theoretical Biology 249, 307–313
 Corso G, de Araújo AIL, de Almeida AM (2008) A new nestedness estimator in
-community networks. arXiv 0803.0007v1 \link{physics.bio-ph}
+community networks.
 Devoto M., Bailey S., Craze P., and Memmott J. (2012) Understanding and
 planning ecological restoration of plant-pollinator networks. Ecology Letters
 15, 319–328. http://dx.doi.org/10.1111/j.1461-0248.2012.01740.x
@@ -154,7 +213,7 @@ and network theory: the role of connectance and size. Proceedings of the
 National Academy of Science USA 99, 12917–12922
 Galeano, J., Pastor, J.M. and Iriondo, J.M. (2008) Weighted-Interaction
 Nestedness Estimator (WINE): A new estimator to calculate over frequency
-matrices. arXiv 0808.3397v1 \link{physics.bio-ph}
+matrices.
 Gotelli, N. J., and G. R. Graves. 1996 Null Models in Ecology. Smithsonian
 Institution Press, Washington D.C.
 Krebs, C. J. 1989. Ecological Methodology. Harper Collins, New York.

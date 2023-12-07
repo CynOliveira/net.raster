@@ -28,6 +28,26 @@ for the lower level set of species.}
 not, where the lower level species (e.g. plants) are rows and higher level (e.g.
 frugivores or pollinators)species are columns. The layers (species) of each
 raster must be sorted according to the bipartite network order!}
+
+\item{method}{Choice between the algorithm(s) provided by Stephen Beckett (2016) or Dormann & Strauss (2016) (\option{method="DormannStrauss"}). Defaults to the much faster and in the majority of cases better algorithm of Beckett. (Note the optional argument \option{forceLPA} to use his slightly inferior but even faster pure LPA algorithm.)}
+
+\item{deep}{
+If \code{deep} is set to FALSE (default), a flat clustering is computed, otherwise submodules are identified recursively within modules. Works only with \option{method="DormannnStrauss"}.
+}
+
+\item{deleteOriginalFiles}{
+If \code{deleteOriginalFiles} is set to TRUE (default), the files mentioned above in the description are deleted from the hard drive disk, otherwise not. Applies only to \option{method="DormannnStrauss"}.
+}
+
+\item{steps}{
+\code{steps} is the number of steps after which the computation of modules stops if no better division into modules than the current one can be found. Applies only to \option{method="DormannnStrauss"}.
+}
+
+\item{tolerance}{How small should the difference between MCMC-swap results be? At some point computer precision fluctuations make the algorithm fail to converge, which is why we choose a (very low) defaults of 1E-10. Applies only to \option{method="DormannnStrauss"}.}
+
+\item{experimental}{Logical; using an undescribed and untested version for which no detail is available? (We suggest: not yet.) Applies only to \option{method="DormannnStrauss"}.}
+
+\item{forceLPA}{Logical; should the even faster pure LPA-algorithm of Beckett be used? DIRT-LPA, the default, is less likely to get trapped in a local minimum, but is slightly slower. Defaults to FALSE.  Applies only to \option{method="Beckett"}.}
 }
 \value{
 Spatraster with the spatial Newman's modularity

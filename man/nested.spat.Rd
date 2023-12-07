@@ -24,6 +24,12 @@ for the lower level set of species.}
 not, where the lower level species (e.g. plants) are rows and higher level (e.g.
 frugivores or pollinators)species are columns. The layers (species) of each
 raster must be sorted according to the bipartite network order!}
+
+\item{method}{One or more of the following: \option{discrepancy}, \option{discrepancy2}, \option{binmatnest}, \option{NODF}, \option{NODF2}, \option{C score}, \option{checker}, \option{weighted NODF}, \option{wine}, \option{ALL}. See details for details on each method.}
+
+\item{rescale}{Should all measures be rescaled so that higher values mean higher nestedness? Defaults to FALSE, i.e. the standard interpretation of each measure is maintained.}
+
+\item{normalised}{Logical, defaulting to TRUE. Should C-scores be normalised to a value between 0 and 1? See \code{\link[bipartite]{C.score}} for details.}
 }
 \value{
 Spatraster with the nestedness metric required
@@ -84,7 +90,7 @@ Felix, G.M., Pinheiro, R.B.P., Poulin, R., Krasnov, B.R. & Mello, M.A.R.
 explained by an integrative hypothesis of specialization. bioRxiv
 Galeano, J., Pastor, J.M., Iriondo and J.M. 2008. Weighted-Interaction
 Nestedness Estimator (WINE): A new estimator to calculate over frequency
-matrices. arXiv 0808.3397v2 \link{physics.bio-ph}
+matrices.
 Rodríguez-Gironés, M.A. and Santamaría, L. 2006. A new algorithm to calculate
 the nestedness temperature of presence-absence matrices. J. Biogeogr. 33,
 924–935.

@@ -1,0 +1,58 @@
+---
+title: "Introduction to the net.raster package and its functionalities"
+author: "Cynthia Valéria Oliveira and Neander Heming"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to the net.raster package and its functionalities}
+  %\usepackage[utf8]\n 
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: sentence  
+---
+
+```{r setup, echo = FALSE, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,
+                      comment = "#>")
+```
+
+-   [Introduction](#intro)
+-   [Installation](#install)
+-   [Data processing](#data)
+-   [Analysis](#analysis)
+-   [Post Processing](#processing)
+-   [References](#references)
+
+## Introduction {#intro}
+The goal of *net.raster* is to calculate spatialized interaction network metrics for bipartite networks, using species presence-absence rasters as input, in addition to the interaction matrix. net.raster improves the visualization of interaction patterns in space, generating a new layer of information based on species distributions. We can calculate potential bipartite interactions on a grid by combining Species Distribution Models, or even other species distribution raster data, from each trophic level. net.raster also allows simultaneous calculation of network metrics for multiple potential communities in space or spatial scenarios over time. The package can be used for mutualistic or antagonistic interactions.
+***
+
+# Functions
+### prep.web
+This function 
+
+[example]
+
+### nested.spat
+This function 
+
+[example]
+
+### computeModules.spat
+This function 
+
+[example]
+
+### specieslevel.spat
+This function 
+
+[example]
+
+### networklevel.spat
+This function 
+
+[example]
+
+***
