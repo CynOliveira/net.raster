@@ -1,21 +1,20 @@
 #' @title Several network indices at the species level for each raster cell
 #'
 #' @description Calculate various simple numbers and indices related to network
-#' nodes (species) for each pixel.
+#' nodes (species) for each pixel. The calculation will be made for each raster
+#' cell, that is, for each subnetwork formed by the co-occurrence modeled for
+#' the pairs of recorded interacting species.
 #'
-#' @param x SpatRaster. Each pixel of a raster (stack) containing presence-
-#' absence data (0 or 1) for both levels species (higher or lower trophic levels)
-#' @param web Matrix. Each weighted bipartite subnetwork (in pixel) formed by the co-occurrence
-#' modeled for the pairs of recorded interacting species, where the lower level
-#' species are rows and higher level species are columns
+#' @param x Vector. Each pixel of a raster (stack) containing presence-
+#' absence data (0 or 1) for the species of higher or lower trophic levels
 #' @param hlyr Logical vector indicating if the species are from higher level
 #'
+#' @inheritParams prep.web
 #' @inheritParams bipartite::specieslevel
-#' @inheritParams backports::suppressWarnings
 #'
-#' @return SpatRaster
+#' @return Vector
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
 #' @references
 #'  Carsten F. Dormann & Jochen Fründ ("bipartite" package)
@@ -58,12 +57,11 @@
 #'  and Poulin, R. (2007) Species abundance and asymmetric interaction strength
 #'  in ecological networks. Oikos 116, 1120–1127
 #'
-#' @examples
 #'
 #' @export
 #'
 
-sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
+sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=F,
                    logbase=exp(1), low.abun=NULL,
                    high.abun=NULL, PDI.normalise=TRUE, PSI.beta=c(1,0),
                    nested.method="NODF",
@@ -74,8 +72,10 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
 
   if(level=="higher"){
     resu <- rep(NA, length(h.pix)) # numeric(length(h.pix))
-  } else {
+  } else if(level=="lower"){
     resu <- rep(NA, length(l.pix)) # numeric(length(l.pix))
+  } else {
+    resu <- rep(NA, length(h.pix) + length(l.pix))
   }
 
   if(all(is.na(x))){
@@ -106,10 +106,15 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
       # print(web_clos.pix)
       spp.res <- which(h.pix)[colnames(web) %in% rownames(web_clos.pix)]
       resu[spp.res] <- web_clos.pix[,ifelse(weighted,2,1)]
-    } else {
+    } else if(level=="lower"){
       spp.res <- which(l.pix)[rownames(web) %in% rownames(web_clos.pix)]
       resu[spp.res] <- web_clos.pix[,ifelse(weighted,2,1)]
-    }
+    } else {
+      spp.res <- c(which(h.pix)[colnames(web) %in% rownames(web_clos.pix[[1]])],
+                   which(l.pix)[rownames(web) %in% rownames(web_clos.pix[[2]])])
+      resu[spp.res] <- c(web_clos.pix[[1]][,ifelse(weighted,2,1)],
+                         web_clos.pix[[2]][,ifelse(weighted,2,1)])
+      }
   }
   return(resu)
 }
@@ -119,26 +124,19 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
 #'
 #' @description Calculate various simple numbers and indices related to network
 #' nodes (species) for raster data. You can see the spatial variation of important
-#' metrics such as species strength and centralities (closeness, betweenness,
-#' and degree). View all available indexes in Details and note that users
-#' may select one index at a time for time-efficient spatial calculation.
-#' Users can also choose both  or one level of interest at a time (higher - default
-#' or lower), as well as choose unweighted metrics whenever their calculation
-#' allows, with the default being weighted calculation.
+#' metrics such as species strength and centralities (closeness - default metric,
+#' betweenness, and degree). View all available indexes in Details and note that
+#' users may select one index at a time for time-efficient spatial calculation.
+#' For levels, "both" is the default, but users can also choose one level of
+#' interest at a time (higher or lower), as well as choose unweighted metrics
+#' whenever their calculation allows, with the default being weighted calculation.
 #'
-#' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the higher level set of species.
-#' @param rl A SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the lower level set of species.
-#' @param web Matrix. A weighted bipartite network matrix, binary (o or 1) or not, where
-#' the lower level species (e.g. plants) are rows and higher level (e.g.
-#' pollinators)species are columns. The layers (species) of each raster must be
-#' sorted according to the bipartite network order, use the prep_web() to check!
 #'
+#' @inheritParams prep.web
 #' @inheritParams terra::app
 #'
-#' @return Spatraster object with the choose species level metric for higher
-#' trophic level (default), lower level or both.
+#' @return Spatraster object with the choose species level metric for both
+#' trophic levels (default), higher or lower level.
 #'
 #' @details
 #' Note that if a network is very small, with few nodes or links, it may be
@@ -146,12 +144,13 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
 #' unreliable. As the calculation is made with the subnet of each pixel, even in
 #' cases like this, it is possible to visualize the spatialized metric on a
 #' macroecological scale. Users may select one index at a time for time-efficient
-#' spatial calculation. The current available indices for species level metrics
-#' are listed bellow and they are adapted from "bipartite" package and users
-#' can find more information about them at the specieslevel() documentation on CRAN
-#' (https://cran.r-project.org/web/packages/bipartite/bipartite.pdf).
+#' spatial calculation,there will be an error message otherwise. Also note that
+#' some indices may have a high processing time for the entire raster, depending
+#' on their algorithms and the processing capacity and RAM of the machine used.
+#' The current available indices for species level metrics are listed bellow and
+#' users can find more information about them at  \link[bipartite]{specieslevel}
 #' • ‘degree’,
-#' • ‘ND’ - normalised degrees,
+#' • 'normalised degree',
 #' • ‘species strength’,
 #' • ‘nestedrank’,
 #' • ‘interaction push pull’ - interaction push/pull
@@ -168,7 +167,9 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
 #' • ‘proportional similarity’,
 #' • ‘d’ - Blüthgen’s d’,
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @seealso \code{\link{prep.web}}
+#'
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
 #' @references
 #'  Carsten F. Dormann & Jochen Fründ ("bipartite" package)
@@ -227,16 +228,20 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="higher", weighted=F,
 #' lower level
 #' lowclos <- specieslevel.spat (rasth, rastl, bipnet, level="lower")
 #' plot(lowclos)
-#' # calculating closeness, now for higher level (default)
+#' plot(lowclos$abuta_selloana) # you can choose one species at a time for
+#' # better visualization
+#' # calculating closeness, now for both levels (default)
 #' allclos <- specieslevel.spat (rasth, rastl, bipnet)
-#' plot(allclos)
-#' # computing normalised degree for both levels
-#' higND <- specieslevel.spat (rasth, rastl, bipnet, index="ND", level="both")
-#' plot(higND)
+#' plot(allclos$attila_rufus) # you can choose one species at a time
+#' plot(allclos$abuta_selloana) #of each level
+#' # computing normalised degree for higher level
+#' hignd <- specieslevel.spat (rasth, rastl, bipnet, index="normalised degree",
+#' level="higher")
+#' plot(hignd$saltator_similis)# you can choose one species at a time
 #'}
 #' @export
 #'
-specieslevel.spat <- function(rh, rl, web, index="closeness", level="higher",
+specieslevel.spat <- function(rh, rl, web, index="closeness", level="both",
                               weighted=F, logbase=exp(1), low.abun=NULL,
                               high.abun=NULL, PDI.normalise=TRUE,
                               PSI.beta=c(1,0), nested.method="NODF",
@@ -248,23 +253,17 @@ specieslevel.spat <- function(rh, rl, web, index="closeness", level="higher",
     stop("You must calculate one species level metrics at a time")
   }
 
-  sph <- names(rh)
-  spl <- names(rl)
 
-  web_sub <- web[spl, sph]
-
-  hlyr <- rep(c(T,F), c(length(sph),length(spl)))
-
-  slr <- terra::app(c(rh, rl),
+  slr <- terra::app(c(pw$rh, pw$rl),
                     sl_vec,
-                    web=web_sub, hlyr=hlyr,
+                    web=pw$web_sub, hlyr=pw$hlyr,
                     index=index, level=level, weighted=weighted)
   if(level=="higher"){
-    names(slr) <- sph
-  } if(level=="lower"){
-    names(slr) <- spl
-  } else {
-    names(slr) <- c(spl, sph)
+    names(slr) <- names(pw$rh)
+  } else if(level=="lower") {
+    names(slr) <- names(pw$rl)
+  } else{
+    names(slr) <- c(names(pw$rh), names(pw$rl))
   }
 
   return(slr)

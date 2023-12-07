@@ -1,21 +1,15 @@
 #' @title Several network indices at the network level for each raster cell
 #'
 #' @description Calculate various indices and values for the bipartite subnetwork
-#' of each pixel.
+#' of each pixel, formed by the co-occurrence modeled for the pairs of recorded
+#' interacting species.
 #'
-#' @param x SpatRaster. Each pixel of a raster (stack) containing presence-
-#' absence data (0 or 1) for both levels species (higher or lower trophic levels)
-#' @param web Matrix. Each weighted bipartite subnetwork (in pixel) formed by the co-occurrence
-#' modeled for the pairs of recorded interacting species, where the lower level
-#' species are rows and higher level species are columns
-#' @param hlyr Logical vector indicating if the species are from higher level
-#'
+#' @inheritParams specieslevel.spat
 #' @inheritParams bipartite::networklevel
-#' @inheritParams backports::suppressWarnings
 #'
-#' @return SpatRaster
+#' @return Vector
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
 #' @references
 #'  Carsten F. Dormann
@@ -56,11 +50,9 @@
 #'  Institution Press, Washington D.C.
 #'  Krebs, C. J. 1989. Ecological Methodology. Harper Collins, New York.
 #'
-#' @examples
-#'
 #' @export
 #'
-nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
+nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
                    ISAmethod="Bluethgen",  SAmethod = "Bluethgen",
                    extinctmethod = "r", nrep = 100, CCfun="median", dist="horn",
                    normalise=T, empty.web=T, logbase="e", intereven="prod",
@@ -122,18 +114,10 @@ nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
 #' connectance, web asymmetry, network specialization (H2) and four options to
 #' compute nestedness. View all available indexes in Details.
 #'
-#' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the higher level set of species.
-#' @param rl A SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the lower level set of species.
-#' @param web Matrix. A weighted bipartite network matrix, binary (o or 1) or not, where
-#' the lower level species (e.g. plants) are rows and higher level (e.g.
-#' pollinators)species are columns. The layers (species) of each raster must be
-#' sorted according to the bipartite network order, use the prep_web() to check!
-#'
+#' @inheritParams prep.web
 #' @inheritParams terra::app
 #'
-#' @return Spatraster
+#' @return Spatraster with the choose network level metric
 #'
 #' @details
 #' Note that if a network is very small, with few nodes or links, it may be
@@ -141,12 +125,13 @@ nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
 #' unreliable. As the calculation is made with the subnet of each pixel, even in
 #' cases like this, it is possible to visualize the spatialized metric on a
 #' macroecological scale. We suggest that users select one index at a time for
-#' time-efficient spatial calculation, but the default follows the "bipartite"
-#' package, being the "ALLBUTDD" (that is, it calculates all indices except
-#' degree distribution fits). The current available indices for network level
-#' metrics are listed bellow and they are adapted from "bipartite" package and users
-#' can find more information about them at the networklevel() documentation on CRAN
-#' (https://cran.r-project.org/web/packages/bipartite/bipartite.pdf).
+#' time-efficient spatial calculation, being the default the "connectance". Also
+#' note that some indices may have a high processing time for the entire raster,
+#' depending on their algorithms and the processing capacity and RAM of the
+#' machine used. The current available indices for network level metrics are
+#' listed bellow and users can find more information about them at
+#' \link[bipartite]{networklevel}.
+#'
 #' There are metrics computed for each level:
 #' • ‘connectance’,
 #' • ‘web asymmetry’,
@@ -168,6 +153,7 @@ nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
 #' • ‘Alatalo interaction evenness’,
 #' • ‘Shannon diversity’,
 #' • ‘H2’ (network specialization);
+#'
 #' and/or those metrics invoked through "grouplevel":
 #' • ‘number of species’ in the respective trophic level,
 #' • ‘mean number of links’,
@@ -180,7 +166,10 @@ nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
 #' • ‘discrepancy’,
 #' • ‘extinction slope’.
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @seealso \code{\link{prep.web}}, \code{\link{nested.spat}},
+#'  \code{\link{computeModules.spat}}
+#'
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
 #' @references
 #'  Carsten F. Dormann
@@ -233,10 +222,10 @@ nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
 #' package="net.raster"))
 #' rastl <- rast(system.file("extdata", "rastl.tif",
 #' package="net.raster"))
-#' # applying the function to compute all indices but degree distribution (default)
-#' for both levels (default)
-#' allbutdd <- networklevel.spat (rasth, rastl, bipnet)
-#' plot(allbutdd)
+#' # applying the function to compute connectance (default) for both levels
+#' (default), that is, the entire network
+#' conn <- networklevel.spat (rasth, rastl, bipnet)
+#' plot(conn)
 #' # calculating  H2 for he entire network
 #' webh2 <- networklevel.spat (rasth, rastl, bipnet, index="H2")
 #' plot(webh2)
@@ -248,7 +237,7 @@ nl_vec <- function(x, web, hlyr, index="ALLBUTDD", level="both", weighted=T,
 #' @export
 #'
 networklevel.spat <- function(rh, rl, web,
-                              index="ALLBUTDD", level="both", weighted=T,
+                              index="connectance", level="both", weighted=T,
                               ISAmethod="Bluethgen",  SAmethod = "Bluethgen",
                               extinctmethod = "r", nrep = 100, CCfun="median",
                               dist="horn", normalise=T, empty.web=T,
@@ -257,7 +246,11 @@ networklevel.spat <- function(rh, rl, web,
 
   pw <- prep.web(rh, rl, web)
 
-  nlr <- terra::app(c(rh, rl),
+  if(index %in% c("ALL", "ALLBUTDD")){
+    stop("You must calculate one species level metrics at a time")
+  }
+
+  nlr <- terra::app(c(pw$rh, pw$rl),
                     nl_vec,
                     web=pw$web_sub, hlyr=pw$hlyr,
                     index=index, level=level,

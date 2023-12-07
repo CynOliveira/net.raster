@@ -1,22 +1,16 @@
 #' @title Several nestedness metrics for each raster cell
 #'
 #' @description Calculates any of several nestedness metrics available for
-#'  bipartite networks, which can be weighted or not, for each raster cell.
+#' bipartite networks, which can be weighted or not, for each raster cell. The
+#' calculation will be made for each raster cell, that is, for each subnetwork
+#' formed by the co-occurrence modeled for the pairs of recorded interacting species.
 #'
-#' @param x SpatRaster. Each pixel of a raster (stack) containing presence-
-#' absence data (0 or 1) for both levels species (higher or lower trophic levels)
-#' @param web Matrix. Each weighted bipartite subnetwork (in pixel) formed by the co-occurrence
-#' modeled for the pairs of recorded interacting species, where the lower level
-#' species are rows and higher level species are columns
-#' @param hlyr Logical vector indicating if the species are from higher level
-#'
+#' @inheritParams specieslevel.spat
 #' @inheritParams bipartite::nested
-#' @inheritParams backports::suppressWarnings
 #'
-#' @return SpatRaster
+#' @return Vector
 #'
-#' @examples
-#'
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #' @export
 #'
 nested_vec <- function(x, web, hlyr, method = "NODF",
@@ -37,11 +31,9 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
     return(resu)
   }
 
-  if(sum(h.pix, na.rm = T)==0|sum(l.pix, na.rm = T)==0)
+  if(sum(h.pix, na.rm = T)<=1|sum(l.pix, na.rm = T)<=1)
     return(resu)
 
-  # print(dim(web))
-  # print(c(length(l.pix), length(h.pix)))
   web <- web[l.pix,h.pix]
 
   if(sum(web, na.rm = T)==0){
@@ -64,35 +56,28 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' @title Several nestedness metrics for raster data
 #'
 #' @description Calculates any of several nestedness metrics available for
-#'  bipartite networks, which can be weighted or not, for raster data. Users may
-#'  choose one of the seven available nestedness indices. See more about them at
-#'  https://cran.r-project.org/web/packages/bipartite/bipartite.pdf
+#' bipartite networks, which can be weighted or not, for raster data. For a
+#' time-efficient processing of spatial data, users may choose one of the nine
+#' available nestedness indices ("discrepancy", "discrepancy2", "binmatnest",
+#' "NODF", "NODF2", "C score", "checker","weighted NODF", "wine"). See more
+#' about them at \link[bipartite]{nested}
 #'
-#' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the higher level set of species.
-#' @param rl A SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the lower level set of species.
-#' @param web Matrix. A bipartite network matrix, where the lower level species
-#' (e.g. plants) are rows and higher level (e.g. pollinators)species are columns.
-#' The layers (species) of each raster must be sorted according to the bipartite
-#' network order. The "prep.web" function test this internally, if not tested
-#' before.
+#' @inheritParams prep.web
+#' @inheritParams terra::app
 #'
-#' @inheritParams bipartite::nested
-#'
-#' @return Spatraster with the nestedness metric required.
+#' @return Spatraster with the nestedness metric required
 #'
 #' @details
 #' Note that if a network is very small, with few nodes or links, it may be
-#' impossible to calculate the choosen metric or calculated result may be
+#' impossible to calculate the choose metric or calculated result may be
 #' unreliable.As the calculation is made with the subnet of each pixel, even in
 #' cases like this, it is possible to visualize the spatialized metric on a
 #' macroecological scale. See more about that and the available nestedness
-#' indices at https://cran.r-project.org/web/packages/bipartite/bipartite.pdf
-#' We also strongly recommend that users select one method at a time for spatial
-#' calculation.
+#' indices at \link[bipartite]{nested}
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @seealso \code{\link{prep.web}}, \code{\link{networklevel.spat}}
+#'
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
 #' @references
 #' Carsten F. Dormann ("bipartite" package)
@@ -137,7 +122,7 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' # applying the function to compute weighted NODF (default)
 #' wNODF <- nested.spat (rasth, rastl, bipnet)
 #' plot(wNODF)
-#' # applying the function to compute C score nestdeness
+#' # applying the function to compute C score index
 #' Cscore <- nested.spat (rasth, rastl, bipnet, method = "C score")
 #' plot(Cscore)
 #'
@@ -147,13 +132,19 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 nested.spat <- function(rh, rl, web, method="weighted NODF", rescale=FALSE,
                         normalised=TRUE) {
 
+  if(method %in% c("discrepancy", "discrepancy2", "binmatnest",
+                    "NODF", "NODF2", "C score", "checker", "weighted NODF", "wine"))
+
   pw <- prep.web(rh, rl, web)
 
-  wlr <- terra::app(c(rh, rl),
+  if(index=="ALL"){
+    stop("You must calculate one nested index at a time")
+  }
+
+  wlr <- terra::app(c(pw$rh, pw$rl),
                     nested_vec,
                     web=pw$web_sub, hlyr=pw$hlyr,
-                    method=method, rescale=rescale) #level=level, weighted=weighted
-
+                    method=method, rescale=rescale, normalised=normalised)
 
   return(wlr)
 }

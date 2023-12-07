@@ -1,20 +1,21 @@
-#' @title Checks if the raster and network names are the same
+#' @title Prepares raster and network data
 #'
-#' @description Checks whether the species names of each Spatraster (higher and
-#' lower level) match the species names in the network. To do this, it creates a
-#' subnet from a subset of species present in raster stacks. In addition to
-#' allowing all net.rasters functions to be correctly executed, it is useful if
-#' the rasters contain fewer species than the bipartite network, as it was not
-#' possible to model or obtain rasters for all species recorded on the web.
+#' @description Excludes in the network the species that not interact. Also checks
+#' whether the species names of each Spatraster (higher and lower level) match
+#' the species names in the cleaned network.
 #'
+#' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
+#' for the higher level set of species.
+#' @param rl A SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
+#' for the lower level set of species.
+#' @param web Matrix. A weighted bipartite network matrix, binary (o or 1) or
+#' not, where the lower level species (e.g. plants) are rows and higher level (e.g.
+#' frugivores or pollinators)species are columns. The layers (species) of each
+#' raster must be sorted according to the bipartite network order!
 #'
-#' @param rh SpatRaster of higher level species
-#' @param rl SpatRaster of lower level species
-#' @param web A bipartite network, which can be weighted or not
-#'
-#'
-#' @return A list with a matrix (subnetwork with the species present in rasters)
-#' and a logical vector indicating if the species are from higher level.
+#' @return A list with a matrix (subnetwork with the species present in rasters),
+#' a logical vector indicating which species are from higher level among all,
+#' and the two cleaned raster stacks of species.
 #' @export
 #'
 #' @examples
@@ -38,21 +39,23 @@
 #' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 
 prep.web <- function(rh, rl, web) {
-  sph <- names(rh)
-  spl <- names(rl)
+  web <- web[rowSums(web)>0, colSums(web)>0] #excluding species that not interact
 
-  ch <- sum(sph %in% colnames(web))
-  cl <- sum(spl %in% rownames(web))
+  sph <- intersect(colnames(web), names(rh))
+  spl <- intersect(rownames(web), names(rl))
 
-  if(ch==0 | cl==0){
+  if(length(sph)==0 | length(spl)==0){
     stop("The species names in web do not match with lower level or higher level")
   }
 
-  web_sub <- web[spl, sph] #subset of species present in raster stacks
-
   hlyr <- rep(c(T,F), c(length(sph),length(spl)))
-  return(list(web_sub=web_sub, hlyr=hlyr))
 
+  return(list(web_sub=web[spl, sph], #subset of species present in raster stacks
+              hlyr=hlyr,
+              rh = rh[[sph]],
+              rl = rl[[spl]]))
 
 }
+
+
 

@@ -5,19 +5,12 @@
 #' cell, that is, for each subnetwork formed by the co-occurrence modeled for
 #' the pairs of recorded interacting species.
 #'
-#' @param x SpatRaster. Each pixel of a raster (stack) containing presence-
-#' absence data (0 or 1) for both levels species (higher or lower trophic levels)
-#' @param web Matrix. Each weighted bipartite subnetwork (in pixel) formed by the co-occurrence
-#' modeled for the pairs of recorded interacting species, where the lower level
-#' species are rows and higher level species are columns
-#' @param hlyr Logical vector indicating if the species are from higher level
-#'
+#' @inheritParams specieslevel.spat
 #' @inheritParams bipartite::computeModules
-#' @inheritParams backports::suppressWarnings
 #'
-#' @return SpatRaster object
+#' @return Vector
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
 #' @references
 #' Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
@@ -36,7 +29,6 @@
 #' Proceedings of the National Academy of Sciences of the United States of
 #' America, 103, 8577—8582.
 #'
-#' @examples
 #'
 #' @export
 
@@ -61,19 +53,19 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
     return(resu)
   }
 
-  if(sum(h.pix, na.rm = T)==0|sum(l.pix, na.rm = T)==0)
+  if(sum(h.pix, na.rm = T)<=1|sum(l.pix, na.rm = T)<=1)
     return(resu)
 
   # print(dim(web))
   # print(c(length(l.pix), length(h.pix)))
-  web <- web[l.pix,h.pix]
+  web <- web[l.pix,h.pix] #subset of web
 
   if(sum(web, na.rm = T)==0){
     return(resu)
   }
 
-
-
+  # log <- capture.output({ #alternative
+  sink(tempfile(), type = "out")
   computMod.pix <- try(suppressWarnings(bipartite::computeModules(web,
                                                 method=method,
                                                 deep = deep,
@@ -82,10 +74,12 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
                                                 steps = steps, tolerance =
                                                 tolerance,
                                                 experimental = experimental,
-                                                forceLPA=forceLPA)))
+                                                forceLPA=forceLPA)), silent = TRUE)
+  # })
+  sink()
 
   if(!inherits(computMod.pix, "try-error")){
-    resu <- computMod.pix@likelihood
+    resu <- computMod.pix@likelihood #modularity value
   }
 
   return(resu)
@@ -95,20 +89,13 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' @title Newman's modularity for raster data
 #'
 #' @description Calculates modules by applying Newman's modularity measure to a
-#' spatial weighted bipartite network.
+#' spatial weighted bipartite network. Users must choose between the algorithms
+#' of Stephen Beckett (2016) or Dormann & Strauss (2016) (method="DormannStrauss").
+#' The default is the Beckett algorithm, which is faster and generally better.
+#' View more about it at  \link[bipartite]{computeModules}
 #'
-#' @param rh SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the higher level set of species.
-#' @param rl A SpatRaster. A raster (stack) containing presence-absence data (0 or 1)
-#' for the lower level set of species.
-#' @param web Matrix. A weighted bipartite network matrix, binary (o or 1) or not, where
-#' the lower level species (e.g. plants) are rows and higher level (e.g.
-#' pollinators)species are columns. The layers (species) of each raster must be
-#' sorted according to the bipartite network order. The "prep.web" function test
-#' this internally, if not tested before.
-#'
+#' @inheritParams prep.web
 #' @inheritParams terra::app
-#' @inheritParams net.raster::prep.web
 #'
 #' @return Spatraster with the spatial Newman's modularity
 #'
@@ -116,10 +103,13 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' Note that if a network is very small, with few nodes or links, it may be
 #' impossible to calculate the metric or calculated result may be unreliable.
 #' As the calculation is made with the subnet of each pixel, even in cases
-#' like this, it is possible to visualize the spatialized metric on a
+#' like this, it can be possible to visualize the spatialized metric on a
 #' macroecological scale.
 #'
-#' @authors Neander Marcel Heming and Cynthia Valéria Oliveira
+#' @seealso \code{\link{prep.web}}
+#'
+#' @author Neander Marcel Heming and Cynthia Valéria Oliveira
+#'
 #' @references
 #' Rouven Strauss, with fixes by Carsten Dormann and Tobias Hegemann;
 #' modified to accommodate Beckett’s algorithm by Carsten Dormann ("bipartite"
@@ -149,10 +139,12 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' package="net.raster"))
 #' rastl <- rast(system.file("extdata", "rastl.tif",
 #' package="net.raster"))
-#' # applying the function to compute Newman's modularity
+#' # computing Newman's modularity with faster method, Beckett algorithm (default)
 #' compMod <- computeModules.spat (rasth, rastl, bipnet)
 #' plot(compMod)
-#'
+#' # calculating Newman's modularity with alternative method
+#' compModDS <- computeModules.spat (rasth, rastl, bipnet, method="DormannStrauss")
+#' plot(compModDS)
 #'
 #'}
 #' @export
@@ -162,9 +154,13 @@ computeModules.spat <- function(rh, rl, web, method="Beckett", deep = FALSE,
                                 steps = 1000000, tolerance = 1e-10,
                                 experimental = FALSE, forceLPA=FALSE) {
 
+  if (deep & method=="Beckett"){
+    stop("Beckett cannot currently be used recursively. \n With 'deep=T' please
+         use method of 'DormannStrauss'.")}
+
   pw <- prep.web(rh, rl, web)
 
-  wlr <- terra::app(c(rh, rl),
+  wlr <- terra::app(c(pw$rh, pw$rl),
                     computMod_vec,
                     web=pw$web_sub, hlyr=pw$hlyr,
                     method=method, deep = deep,
