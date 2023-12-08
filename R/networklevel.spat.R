@@ -94,7 +94,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' listed bellow and users can find more information about them at
 #' \link[bipartite]{networklevel}.
 #'
-#' There are metrics computed for each level:
+#' There are metrics computed for the entire network:
 #' • ‘connectance’,
 #' • ‘web asymmetry’,
 #' • ‘links per species’,
@@ -126,7 +126,12 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' • ‘C score’,
 #' • ‘V ratio’,
 #' • ‘discrepancy’,
-#' • ‘extinction slope’.
+#' • ‘extinction slope’,
+#' • ‘robustness’,
+#' • ‘niche overlap’,
+#' • ‘generality’,
+#' • ‘vulnerability’,
+#' • ‘fc’ (or alternatively ‘functional complementarity’).
 #'
 #' @seealso \code{\link{prep.web}}, \code{\link{nested.spat}},
 #'  \code{\link{computeModules.spat}}
@@ -158,7 +163,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #'  community networks.
 #'  Devoto M., Bailey S., Craze P., and Memmott J. (2012) Understanding and
 #'  planning ecological restoration of plant-pollinator networks. Ecology Letters
-#'  15, 319–328. http://dx.doi.org/10.1111/j.1461-0248.2012.01740.x
+#'  15, 319–328.
 #'  Dormann, C.F., Fründ, J., Blüthgen, N., and Gruber, B. (2009) Indices, graphs
 #'  and null models: analysing bipartite ecological networks. The Open Ecology
 #'  Journal 2, 7–24.
@@ -208,8 +213,8 @@ networklevel.spat <- function(rh, rl, web,
 
   pw <- prep.web(rh, rl, web)
 
-  if(index %in% c("ALL", "ALLBUTDD")){
-    stop("You must calculate one species level metrics at a time")
+  if(index %in% c("ALL", "ALLBUTDD", "info", "binary", "quantitative", "‘topology")){
+    stop("You must calculate one network level metrics at a time")
   }
 
   nlr <- terra::app(c(pw$rh, pw$rl),

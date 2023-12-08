@@ -1,6 +1,6 @@
 ---
 title: "Introduction to the net.raster package and its functionalities"
-author: "Cynthia Valéria Oliveira and Neander Heming"
+author: "Cynthia Valéria Oliveira and Neander Marcel Heming"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -26,7 +26,15 @@ knitr::opts_chunk$set(collapse = TRUE,message=FALSE, warning = FALSE,
 -   [References](#references)
 
 ## Introduction {#intro}
-The goal of *net.raster* is to calculate spatialized interaction network metrics for bipartite networks, using species presence-absence rasters as input, in addition to the interaction matrix. net.raster improves the visualization of interaction patterns in space, generating a new layer of information based on species distributions. We can calculate potential bipartite interactions on a grid by combining Species Distribution Models, or even other species distribution raster data, from each trophic level. net.raster also allows simultaneous calculation of network metrics for multiple potential communities in space or spatial scenarios over time. The package can be used for mutualistic or antagonistic interactions.
+
+[`net.raster`](https://github.com/CynOliveira/net.raster) is an R package to 
+calculate spatialized interaction network metrics for bipartite networks, using species presence-absence rasters as input, in addition to the interaction matrix. Thus, it improves the visualization of interaction patterns in space, generating a new layer of information based on species distributions. We can calculate potential bipartite interactions on a grid by combining Species Distribution Models, or even other species distribution raster data, from each trophic level. [`net.raster`] also allows simultaneous calculation of network metrics for multiple potential communities in space or spatial scenarios over time. The package can be used for mutualistic or antagonistic interactions.
+
+[`net.raster`] ecological network calculations are based on three steps. Initially, we need to carry out and/or compilate field studies that record interactions between species; they can be binary (interactions presence-absence) or quantitative (usually interaction frequency). We then use species distributions (such as those estimated through ecological niche models) of each of the interacting species for the whole area of interest. At this step, we can also use other types of presence-absence distribution maps, like those provided by IUCN. Finally, it is necessary to combine the distribution rasters of all species at both trophic levels with the information about their interactions. 
+
+The initial step requires combining all species distribution rasters of each trophic level (lower and higher level - LL and HL) on two raster stacks (multi-layer SpatRaster objects from terra R package, Hijmans 2022). Another required input is the network matrix, which records observed interactions. In the next step the `prep.web()` function verifies if the species names in the raster stacks of both trophic levels match the species names in the interaction matrix. Otherwise, an error message will appear, and the user must review the inputs.
+
+There are currently 15 indices that can be calculated using the function `networklevel.spat()` through the “index” argument: connectance, weighted connectance, web specialisation (H2’), web asymmetry, links per species, linkage density, number of compartments, compartment diversity, cluster coefficient, ISA (or alternatively interaction strength asymmetry or dependence asymmetry), SA (or alternatively specialisation asymmetry), Fisher alpha, interaction evenness, Alatalo interaction evenness, and Shannon diversity. These indices are equivalent to the ones from the networklevel() function of the bipartite R package. Also, networklevel.spat() provides four metrics for nestedness, including NODF (an acronym for weighted Nested Overlap and Decreasing Fill), weighted nestedness, and weighted NODF. Moreover, there are those metrics invoked through “grouplevel” (higher or lower trophic level): number of species in the respective trophic level, mean number of links, mean number of shared partners, weighted cluster coefficient, degree distribution, togetherness, C score, V ratio, discrepancy, extinction slope, robustness, niche overlap, generality, vulnerability, and fc (or alternatively functional complementarity).
 ***
 
 # Functions

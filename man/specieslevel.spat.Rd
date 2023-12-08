@@ -98,13 +98,17 @@ whenever their calculation allows, with the default being weighted calculation.
 }
 \details{
 Note that if a network is very small, with few nodes or links, it may be
-impossible to calculate the choose metric or calculated result may be
-unreliable. As the calculation is made with the subnet of each pixel, even in
-cases like this, it is possible to visualize the spatialized metric on a
-macroecological scale. Users may select one index at a time for time-efficient
-spatial calculation,there will be an error message otherwise. Also note that
-some indices may have a high processing time for the entire raster, depending
-on their algorithms and the processing capacity and RAM of the machine used.
+impossible to calculate the chosen metric or the calculated result may be
+unreliable. For example, some metrics, such as closeness and betweenness
+centrality, may present an error message for some pixels, but be computed over
+the spatial extent in all pixels where this is possible. As the calculation
+is made with the subnetwork of each pixel, even in these cases it is possible
+to visualize the spatialized metric on a macroecological scale.
+Users may select one index at a time for time-efficient spatial calculation,
+there will be an error message otherwise. Also note that some indices may
+have a high processing time for the entire raster, depending on their
+algorithms, the size of the rasters and the network, and the processing
+capacity and available RAM of the machine used.
 The current available indices for species level metrics are listed bellow and
 users can find more information about them at  \link[bipartite]{specieslevel}
 • ‘degree’,
@@ -118,8 +122,8 @@ users can find more information about them at  \link[bipartite]{specieslevel}
 • ‘PSI’ - pollination service index ,
 • ‘betweenness’ - betweenness centrality and its weighted counterpart,
 • ‘closeness’ - closeness centrality and its weighted counterpart,
-• ‘Fisher’ - Fisher’s alpha index,
-• ‘diversity’ - Shannon diversity of interactions
+• ‘Fisher alpha’ - Fisher’s alpha index,
+• ‘partner diversity’ - Shannon diversity of interactions
 • ‘effective partners’,
 • ‘proportional generality’,
 • ‘proportional similarity’,

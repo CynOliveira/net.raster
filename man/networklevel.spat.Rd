@@ -120,7 +120,7 @@ machine used. The current available indices for network level metrics are
 listed bellow and users can find more information about them at
 \link[bipartite]{networklevel}.
 
-There are metrics computed for each level:
+There are metrics computed for the entire network:
 • ‘connectance’,
 • ‘web asymmetry’,
 • ‘links per species’,
@@ -152,7 +152,12 @@ and/or those metrics invoked through "grouplevel":
 • ‘C score’,
 • ‘V ratio’,
 • ‘discrepancy’,
-• ‘extinction slope’.
+• ‘extinction slope’,
+• ‘robustness’,
+• ‘niche overlap’,
+• ‘generality’,
+• ‘vulnerability’,
+• ‘fc’ (or alternatively ‘functional complementarity’).
 }
 \examples{
 \dontrun{
@@ -204,7 +209,7 @@ Corso G, de Araújo AIL, de Almeida AM (2008) A new nestedness estimator in
 community networks.
 Devoto M., Bailey S., Craze P., and Memmott J. (2012) Understanding and
 planning ecological restoration of plant-pollinator networks. Ecology Letters
-15, 319–328. http://dx.doi.org/10.1111/j.1461-0248.2012.01740.x
+15, 319–328.
 Dormann, C.F., Fründ, J., Blüthgen, N., and Gruber, B. (2009) Indices, graphs
 and null models: analysing bipartite ecological networks. The Open Ecology
 Journal 2, 7–24.

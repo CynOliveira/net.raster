@@ -139,7 +139,7 @@ nested.spat <- function(rh, rl, web, method="weighted NODF", rescale=FALSE,
   pw <- prep.web(rh, rl, web)
 
   if(method=="ALL"){
-    stop("You must calculate one nested index at a time")
+    stop("You must choose one nested method at a time")
   }
 
   wlr <- terra::app(c(pw$rh, pw$rl),

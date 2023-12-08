@@ -9,6 +9,7 @@ test_that("returned object classes are correct", {
                                   package="net.raster"), row.names=1, sep= ";" )
 
   t <- computeModules.spat(casth, castl, castnet)
+  t <- computeModules.spat(casth, castl, castnet, method = "DormannStrauss")
 
   # tests
   expect_s4_class(t, "SpatRaster")
@@ -26,9 +27,9 @@ test_that("error is returned when an argument is missing", {
 
   # tests
   expect_error(computeModules.spat(casth, castl))
-  expect_error(computeModules.spat(casth, castnet))
+  expect_error(computeModules.spat(casth, castnet, method="DormannStrauss"))
   expect_error(computeModules.spat(castl, castnet))
-  expect_error(computeModules.spat(castnet))
+  expect_error(computeModules.spat(castnet, method="DormannStrauss"))
   expect_error(computeModules.spat(casth))
   expect_error(computeModules.spat(castl))
 
