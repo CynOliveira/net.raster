@@ -86,13 +86,12 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' impossible to calculate the choose metric or calculated result may be
 #' unreliable. As the calculation is made with the subnet of each pixel, even in
 #' cases like this, it is possible to visualize the spatialized metric on a
-#' macroecological scale. We suggest that users select one index at a time for
-#' time-efficient spatial calculation, being the default the "connectance". Also
-#' note that some indices may have a high processing time for the entire raster,
-#' depending on their algorithms and the processing capacity and RAM of the
-#' machine used. The current available indices for network level metrics are
-#' listed bellow and users can find more information about them at
-#' \link[bipartite]{networklevel}.
+#' macroecological scale. Users may select one index at a time for time-efficient
+#' spatial calculation, being the default the "connectance". Also note that some
+#' indices may have a high processing time for the entire raster, depending on
+#' their algorithms and the processing capacity and RAM of the machine used.
+#' The current available indices for network level metrics are listed bellow and
+#' users can find more information about them at \link[bipartite]{networklevel}.
 #'
 #' There are metrics computed for the entire network:
 #' • ‘connectance’,

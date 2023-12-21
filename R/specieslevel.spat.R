@@ -87,9 +87,8 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
 #' betweenness, and degree). View all available indexes in Details and note that
 #' users may select one index at a time for time-efficient spatial calculation.
 #' For levels, "both" is the default, but users can also choose one level of
-#' interest at a time (higher or lower), as well as choose unweighted metrics
-#' whenever their calculation allows, with the default being weighted calculation.
-#'
+#' interest at a time (higher or lower), as well as choose weighted metrics
+#' whenever their calculation allows, with the default being unweighted calculation.
 #'
 #' @inheritParams prep.web
 #' @inheritParams sl_vec
@@ -129,7 +128,7 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
 #' • ‘effective partners’,
 #' • ‘proportional generality’,
 #' • ‘proportional similarity’,
-#' • ‘d’ - Blüthgen’s d’,
+#' • ‘d’ - Blüthgen’s d’
 #'
 #' @seealso \code{\link{prep.web}}
 #'
