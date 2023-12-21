@@ -215,27 +215,21 @@ plot(lowdd)
 
 ## References {#references}
 
-Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs
-and null models: analyzing bipartite ecological networks. The Open Ecology
-Journal, 2, 7-24.
+Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs and null models: analyzing bipartite ecological networks. The Open Ecology Journal, 2, 7-24.
 
-Dormann, C.F., Gruber B. & Fruend, J. (2008). Introducing the bipartite
-Package: Analysing Ecological Networks. R news Vol 8/2, 8 - 11.
+Dormann, C.F., Gruber B. & Fruend, J. (2008). Introducing the bipartite Package: Analysing Ecological Networks. R news Vol 8/2, 8 - 11.
 
-Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in
-pollination networks. Network Biology 1, 1 - 20.
+Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in pollination networks. Network Biology 1, 1 - 20.
 
-Heming, N. M.; Dambros, C.; Gutiérrez, E. E. (2018). ENMwizard: AIC model averaging and other advanced techniques in Ecological Niche Modeling made easy.             <https://github.com/HemingNM/ENMwizard>
+Heming, N. M.; Dambros, C.; Gutiérrez, E. E. (2018). ENMwizard: AIC model averaging and other advanced techniques in Ecological Niche Modeling made easy. <https://github.com/HemingNM/ENMwizard>
 
 Hjimans, R. J. (2022). Terra, Spatial Data Analysis (1.6.7).       <https://CRAN.R-project.org/package=terra>
 
-Newman,M. E. & Girvan, M.( 2004).  Finding and evaluating community structure in    networks. Physical review E, 69(2), p. 026113.    <https://doi.org/10.1103/PhysRevE.69.026113>
+Newman,M. E. & Girvan, M.( 2004).  Finding and evaluating community structure in networks. Physical review E, 69(2), p. 026113. <https://doi.org/10.1103/PhysRevE.69.026113>
 
 Phillips SJ, Anderson RP, Dudík M, et al (2017) Opening the black box: an open-source release of Maxent. Ecography, 40, 887–893. <https://doi.org/10.1111/ecog.03049>
 
-Phillips SJ, Anderson RP, Schapire RE (2006) Maximum entropy modeling of species
-geographic distributions. Ecological Modelling, 190, 231–259. 
-<https://doi.org/10.1016/j.ecolmodel.2005.03.026>
+Phillips SJ, Anderson RP, Schapire RE (2006) Maximum entropy modeling of species geographic distributions. Ecological Modelling, 190, 231–259. <https://doi.org/10.1016/j.ecolmodel.2005.03.026>
 
 Poisot, T., Bergeron, G., Cazelles, K., Dallas, T., Gravel, D., MacDonald, A., Mercier, B., Violet, C., Vissault, S. (2021). Global knowledge gaps in species interaction networks data. Journal Of Biogeography, 48(7), 1552-1563. <http://dx.doi.org/10.1111/jbi.14127>
 
