@@ -1,7 +1,7 @@
 #' @title Several nestedness metrics for each raster cell
 #'
 #' @description Calculates any of several nestedness metrics available for
-#' bipartite networks, which can be weighted or not, for each raster cell. The
+#' bipartite networks for each raster cell. The
 #' calculation will be made for each raster cell, that is, for each subnetwork
 #' formed by the co-occurrence modeled for the pairs of recorded interacting species.
 #'
@@ -56,10 +56,11 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' @title Several nestedness metrics for raster data
 #'
 #' @description Calculates any of several nestedness metrics available for
-#' bipartite networks, which can be weighted or not, for raster data. For a
-#' time-efficient processing of spatial data, users may choose one of the nine
+#' bipartite networks for raster data. Note that
+#' net.raster only allows unweighted calculation of bipartite network metrics.
+#' For a time-efficient processing of spatial data, users may choose one of the
 #' available nestedness indices ("discrepancy", "discrepancy2", "binmatnest",
-#' "NODF", "NODF2", "C score", "checker","weighted NODF", "wine"). See more
+#' "NODF", "NODF2", "C score", "checker"). See more
 #' about them at \link[bipartite]{nested}
 #'
 #' @inheritParams prep.web
@@ -120,9 +121,9 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #' package="net.raster"))
 #' rastl <- rast(system.file("extdata", "rastl.tif",
 #' package="net.raster"))
-#' # applying the function to compute weighted NODF (default)
-#' wNODF <- nested.spat (rasth, rastl, bipnet)
-#' plot(wNODF)
+#' # applying the function to compute NODF (default)
+#' NODF <- nested.spat (rasth, rastl, bipnet)
+#' plot(NODF)
 #' # applying the function to compute C score index
 #' Cscore <- nested.spat (rasth, rastl, bipnet, method = "C score")
 #' plot(Cscore)
@@ -130,11 +131,12 @@ nested_vec <- function(x, web, hlyr, method = "NODF",
 #'}
 #'
 #' @export
-nested.spat <- function(rh, rl, web, method="weighted NODF", rescale=FALSE,
+nested.spat <- function(rh, rl, web, method="NODF", rescale=FALSE,
                         normalised=TRUE) {
 
   if(method %in% c("discrepancy", "discrepancy2", "binmatnest",
-                    "NODF", "NODF2", "C score", "checker", "weighted NODF", "wine"))
+                    "NODF", "NODF2", "C score", "checker"#, "weighted NODF", "wine"
+                   ))
 
   pw <- prep.web(rh, rl, web)
 

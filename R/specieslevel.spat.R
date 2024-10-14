@@ -8,7 +8,6 @@
 #' @param x Vector. Each pixel of a raster (stack) containing presence-
 #' absence data (0 or 1) for the species of higher or lower trophic levels
 #' @param hlyr Logical vector indicating if the species are from higher level
-#' @param weighted Logical
 #'
 #' @inheritParams prep.web
 #' @inheritParams bipartite::specieslevel
@@ -24,7 +23,11 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
                    logbase=exp(1), low.abun=NULL,
                    high.abun=NULL, PDI.normalise=TRUE, PSI.beta=c(1,0),
                    nested.method="NODF",
-                   nested.normalised=TRUE, nested.weighted=TRUE, empty.web=TRUE){
+                   nested.normalised=TRUE, nested.weighted=FALSE,
+                   empty.web=TRUE){
+
+  weighted = F
+  nested.weighted = F
 
   h.pix <- x[hlyr]==1
   l.pix <- x[!hlyr]==1
@@ -87,8 +90,8 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
 #' betweenness, and degree). View all available indexes in Details and note that
 #' users may select one index at a time for time-efficient spatial calculation.
 #' For levels, "both" is the default, but users can also choose one level of
-#' interest at a time (higher or lower), as well as choose weighted metrics
-#' whenever their calculation allows, with the default being unweighted calculation.
+#' interest at a time (higher or lower). Note that net.raster only allows
+#' unweighted calculation of bipartite network metrics.
 #'
 #' @inheritParams prep.web
 #' @inheritParams sl_vec
@@ -121,8 +124,8 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
 #' • ‘resource range’,
 #' • ‘species specificity’,
 #' • ‘PSI’ - pollination service index ,
-#' • ‘betweenness’ - betweenness centrality and its weighted counterpart,
-#' • ‘closeness’ - closeness centrality and its weighted counterpart,
+#' • ‘betweenness’ - betweenness centrality,
+#' • ‘closeness’ - closeness centrality,
 #' • ‘Fisher alpha’ - Fisher’s alpha index,
 #' • ‘partner diversity’ - Shannon diversity of interactions
 #' • ‘effective partners’,
@@ -205,10 +208,12 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
 #' @export
 #'
 specieslevel.spat <- function(rh, rl, web, index="closeness", level="both",
-                              weighted=FALSE, logbase=exp(1), low.abun=NULL,
+                              weighted=FALSE,
+                              logbase=exp(1), low.abun=NULL,
                               high.abun=NULL, PDI.normalise=TRUE,
                               PSI.beta=c(1,0), nested.method="NODF",
-                              nested.normalised=TRUE, nested.weighted=TRUE,
+                              nested.normalised=TRUE,
+                              nested.weighted=TRUE,
                               empty.web=TRUE) {
   pw <- prep.web(rh, rl, web)
 
@@ -220,7 +225,8 @@ specieslevel.spat <- function(rh, rl, web, index="closeness", level="both",
   slr <- terra::app(c(pw$rh, pw$rl),
                     sl_vec,
                     web=pw$web_sub, hlyr=pw$hlyr,
-                    index=index, level=level, weighted=weighted)
+                    index=index, level=level, weighted=weighted
+                    )
   if(level=="higher"){
     names(slr) <- names(pw$rh)
   } else if(level=="lower") {

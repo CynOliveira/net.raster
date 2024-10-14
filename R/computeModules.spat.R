@@ -12,7 +12,7 @@
 #'
 #' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 #'
-#' @export
+#'
 
 
 computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
@@ -130,7 +130,7 @@ computMod_vec <- function(x, web, hlyr, method="Beckett", deep = FALSE,
 #' plot(compModDS)
 #'
 #'}
-#' @export
+#'
 
 computeModules.spat <- function(rh, rl, web, method="Beckett", deep = FALSE,
                                 deleteOriginalFiles = TRUE,

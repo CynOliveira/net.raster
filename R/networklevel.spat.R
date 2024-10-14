@@ -13,11 +13,15 @@
 #'
 #' @export
 #'
-nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
+nl_vec <- function(x, web, hlyr, index="connectance", level="both", #weighted=F,
                    ISAmethod="Bluethgen",  SAmethod = "Bluethgen",
                    extinctmethod = "r", nrep = 100, CCfun="median", dist="horn",
                    normalise=T, empty.web=T, logbase="e", intereven="prod",
-                   H2_integer=T, fcweighted=T, fcdist="euclidean", legacy=F){
+                   H2_integer=T, #fcweighted=F,
+                   fcdist="euclidean", legacy=F){
+
+  weighted = F
+  fcweighted = F
 
   h.pix <- x[hlyr]==1
   l.pix <- x[!hlyr]==1
@@ -47,7 +51,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 
   networklevel.pix <- try(suppressWarnings(bipartite::networklevel(web,
                                                   index=index, level=level,
-                                                  weighted=weighted,
+                                                  #weighted=weighted,
                                                   ISAmethod=ISAmethod,
                                                   SAmethod=SAmethod ,
                                                   extinctmethod=extinctmethod,
@@ -57,7 +61,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
                                                   logbase=logbase,
                                                   intereven=intereven,
                                                   H2_integer=H2_integer,
-                                                  fcweighted=fcweighted,
+                                                  #fcweighted=fcweighted,
                                                   fcdist=fcdist, legacy=legacy)))
 
   if(!inherits(networklevel.pix, "try-error")){
@@ -72,8 +76,9 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #'
 #' @description Calculate various indices and values for bipartite networks on
 #' raster data. You can see the spatial variation of important metrics such as
-#' connectance, web asymmetry, network specialization (H2) and four options to
-#' compute nestedness. View all available indexes in Details.
+#' connectance, web asymmetry, network specialization (H2) and two options to
+#' compute nestedness. View all available indexes in Details. Note that
+#' net.raster only allows unweighted calculation of bipartite network metrics.
 #'
 #' @inheritParams prep.web
 #' @inheritParams nl_vec
@@ -102,13 +107,10 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' • ‘cluster coefficient’,
 #' • ‘nestedness’
 #' • ‘NODF’,
-#' • ‘weighted nestedness’
-#' • ‘weighted NODF’,
 #' • ‘ISA’ (or alternatively ‘interaction strength asymmetry’ or ‘dependence
 #' asymmetry’),
 #' • ‘SA’ (or alternatively ‘specialisation asymmetry’),
 #' • ‘linkage density’,
-#' • ‘weighted connectance’,
 #' • ‘Fisher alpha’,
 #' • ‘interaction evenness’,
 #' • ‘Alatalo interaction evenness’,
@@ -119,7 +121,6 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' • ‘number of species’ in the respective trophic level,
 #' • ‘mean number of links’,
 #' • ‘mean number of shared partners’,
-#' • ‘weighted cluster coefficient’,
 #' • ‘degree distribution’,
 #' • ‘togetherness’,
 #' • ‘C score’,
@@ -143,7 +144,7 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #'  P.R. 2008. A consistent metric for nestedness analysis in ecological systems:
 #'  reconciling concept and measurement. Oikos 117, 1227–1239
 #'  Almeida-Neto, M. & Ulrich, W. (2011) A straightforward computational approach
-#'  for measuringnestedness using quantitative matrices. Environmental Modelling
+#'  for measuring nestedness using quantitative matrices. Environmental Modelling
 #'  & Software 26, 173–178
 #'  Bascompte, J., Jordano, P. and Olesen, J. M. 2006 Asymmetric coevolutionary
 #'  networks facilitate biodiversity maintenance. Science 312, 431–433
@@ -169,9 +170,6 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #'  Dunne, J. A., R. J. Williams, and N. D. Martinez. 2002 Food-web structure
 #'  and network theory: the role of connectance and size. Proceedings of the
 #'  National Academy of Science USA 99, 12917–12922
-#'  Galeano, J., Pastor, J.M. and Iriondo, J.M. (2008) Weighted-Interaction
-#'  Nestedness Estimator (WINE): A new estimator to calculate over frequency
-#'  matrices.
 #'  Gotelli, N. J., and G. R. Graves. 1996 Null Models in Ecology. Smithsonian
 #'  Institution Press, Washington D.C.
 #'  Krebs, C. J. 1989. Ecological Methodology. Harper Collins, New York.
@@ -203,12 +201,13 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", weighted=T,
 #' @export
 #'
 networklevel.spat <- function(rh, rl, web,
-                              index="connectance", level="both", weighted=T,
+                              index="connectance", level="both", #weighted=F,
                               ISAmethod="Bluethgen",  SAmethod = "Bluethgen",
                               extinctmethod = "r", nrep = 100, CCfun="median",
                               dist="horn", normalise=T, empty.web=T,
                               logbase="e", intereven="prod",H2_integer=T,
-                              fcweighted=T, fcdist="euclidean", legacy=F) {
+                              #fcweighted=T,
+                              fcdist="euclidean", legacy=F) {
 
   pw <- prep.web(rh, rl, web)
 
@@ -220,11 +219,13 @@ networklevel.spat <- function(rh, rl, web,
                     nl_vec,
                     web=pw$web_sub, hlyr=pw$hlyr,
                     index=index, level=level,
-                    weighted=weighted, ISAmethod=ISAmethod, SAmethod=SAmethod,
+                    #weighted=weighted,
+                    ISAmethod=ISAmethod, SAmethod=SAmethod,
                     extinctmethod=extinctmethod, nrep=nrep, CCfun=CCfun,
                     dist=dist,normalise=normalise, empty.web=empty.web,
                     logbase=logbase, intereven=intereven, H2_integer=H2_integer,
-                    fcweighted=fcweighted, fcdist=fcdist, legacy=legacy)
+                    #fcweighted=fcweighted,
+                    fcdist=fcdist, legacy=legacy)
 
 
   return(nlr)

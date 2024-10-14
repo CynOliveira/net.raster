@@ -15,7 +15,9 @@
 #'
 #' @return A list with a matrix (subnetwork with the species present in rasters),
 #' a logical vector indicating which species are from higher level among all,
-#' and the two cleaned raster stacks of species.
+#' and the two cleaned raster stacks of species.Note that net.raster only allows
+#' unweighted calculation of bipartite network metrics.
+#'
 #' @export
 #'
 #' @examples
