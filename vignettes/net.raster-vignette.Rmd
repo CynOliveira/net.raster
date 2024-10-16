@@ -70,7 +70,28 @@ Note that if a network is very small, with few nodes or links, it may be impossi
 
 -   **Dataset**
 
-We demonstrate the applicability of net.raster using a real network dataset of frugivorous birds and plants recorded in the Brazilian Atlantic Forest (Silva et al. 2002), providing SpatRasters of bird and plant species for present and future climate scenarios (2050, optimistic scenario for greenhouse gas emissions). The original interaction matrix has 76 bird species and 150 plant species before the correction and consolidation of names with current and valid synonyms, and was subsetted to include  the original dataset into 67 bird species and 121 plant species. We used only a subset of the species because many of them did not have the minimum number of occurrences required for modelling. Therefore, we  had to exclude them and their interactions from the interactions matrix, also excluding species that become non-interactive after that. First, we obtained occurrence records for these species (Global Biodiversity Information Facility- GBIF: http://www.gbif.org) and combined them with bioclimatic variables (Fick and Hijmans, 2017) to predict their current (1970-2000) and future (2050) potential distributions using the MaxEnt algorithm (Phillips et al. 2006, 2017), through the ENMWizard R package (Heming et al. 2018). This process generated two sets of multilayer SpatRaster objects, where each layer represents a binary map of climatically suitable areas for the species in the present and future under an optimistic scenario for greenhouse gas emissions, projected across the Atlantic Forest (67 layers for birds and 121 for plants). We used these SpatRaster objects along with an interaction matrix, where the rows represent plant species and the columns represent bird species. In this matrix, observed interactions between species pairs (i.e., plant-bird interactions) are indicated by the number 1. The rasters for birds and plants at present are “rasthpres” and “rastlpres” and the rasters for the future scenario are “rasterh2050opt” and “rasterl2050opt”, respectively. Users need to calculate the metrics for each temporal scenario in turn, and the arguments "rasth" and "rastl" within each function must correspond to the SpatRasters of each group in the scenario of interest. Thus, in our example, we use "rasthpres" and "rastlpres" to calculate the network metrics of interest based on the potential distribution of the species under current climate conditions. For the available future scenario, we use "rasth2050opt" and "rastl2050opt", i.e., the potential future distributions. Note that for both temporal scenarios, the known interaction matrix that underlies the spatialized calculation of potential interactions is the same as the one entered as input.
+We demonstrate the applicability of net.raster using a real network dataset of frugivorous birds and plants recorded in the Brazilian
+Atlantic Forest (Silva et al. 2002), providing SpatRasters of bird and plant species for present and future climate scenarios (2050,
+optimistic scenario for greenhouse gas emissions). The original interaction matrix has 76 bird species and 150 plant species before the
+correction and consolidation of names with current and valid synonyms, and was subsetted to include  the original dataset into 67 bird species and 121 plant species. We used only a subset of the species because many of them did not have the minimum number of occurrences required 
+for modelling.
+
+Therefore, we  had to exclude them and their interactions from the interactions matrix, also excluding species that become
+non-interactive after that. First, we obtained occurrence records for these species (Global Biodiversity Information Facility- GBIF: http://www.gbif.org) and combined them with bioclimatic variables (Fick and Hijmans, 2017) to predict their current (1970-2000) 
+and future (2050) potential distributions using the MaxEnt algorithm (Phillips et al. 2006, 2017), through the ENMWizard R package 
+(Heming et al. 2018). This process generated two sets of multilayer SpatRaster objects, where each layer represents a binary map 
+of climatically suitable areas for the species in the present and future under an optimistic scenario for greenhouse gas emissions,
+projected across the Atlantic Forest (67 layers for birds and 121 for plants).
+
+We used these SpatRaster objects along with an interaction matrix, where the rows represent plant species and the columns represent bird species. In this matrix, observed interactions between species pairs (i.e., plant-bird interactions) are indicated by the number 1. 
+The rasters for birds and plants at present are “rasthpres” and “rastlpres” and the rasters for the future scenario are “rasterh2050opt”
+and “rasterl2050opt”, respectively.
+
+Users need to calculate the metrics for each temporal scenario in turn, and the arguments "rasth" and "rastl" within each function 
+must correspond to the SpatRasters of each group in the scenario of interest. Thus, in our example, we use "rasthpres" and "rastlpres"
+to calculate the network metrics of interest based on the potential distribution of the species under current climate conditions.
+For the available future scenario, we use "rasth2050opt" and "rastl2050opt", i.e., the potential future distributions. 
+Note that for both temporal scenarios, the known interaction matrix that underlies the spatialized calculation of potential interactions is the same as the one entered as input.
 
 ```{r}
 # load bipartite network and the raster stacks of higher level and lower level species
@@ -206,6 +227,8 @@ Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs and n
 Dormann, C.F., Gruber B. & Fruend, J. (2008). Introducing the bipartite Package: Analysing Ecological Networks. R news Vol 8/2, 8 - 11.
 
 Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in pollination networks. Network Biology 1, 1 - 20.
+
+Fick, S. E. & Hijmans, R. J. (2017) WorldClim 2: new 1‐km spatial resolution climate surfaces for global land areas. Int. J. Climatol. 37, 4302–4315 .
 
 Heming, N. M.; Dambros, C.; Gutiérrez, E. E. (2018). ENMwizard: AIC model averaging and other advanced techniques in Ecological Niche Modeling made easy. <https://github.com/HemingNM/ENMwizard>
 
