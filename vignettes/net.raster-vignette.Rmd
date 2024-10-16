@@ -70,21 +70,25 @@ Note that if a network is very small, with few nodes or links, it may be impossi
 
 -   **Dataset**
 
-We demonstrate the applicability of the net.raster by using a dataset of a real plant-frugivore network recorded in the Brazilian Atlantic Forest (Silva et al. 2002). We subsetted the original dataset to 70 bird species and 138 plant species. This subsetted network contains only those bird and plant species whose modelling was possible, due to the number of occurrence points. We provide the quantitative interaction matrix and the species distribution rasters, projected for current climate variables across the Atlantic Forest using MaxEnt algorithm (Phillips et al. 2006, 2017) through ENMWizard R package (Heming et al. 2018). 
+We demonstrate the applicability of net.raster using a real network dataset of frugivorous birds and plants recorded in the Brazilian Atlantic Forest (Silva et al. 2002), providing SpatRasters of bird and plant species for present and future climate scenarios (2050, optimistic scenario for greenhouse gas emissions). The original interaction matrix has 76 bird species and 150 plant species before the correction and consolidation of names with current and valid synonyms, and was subsetted to include  the original dataset into 67 bird species and 121 plant species. We used only a subset of the species because many of them did not have the minimum number of occurrences required for modelling. Therefore, we  had to exclude them and their interactions from the interactions matrix, also excluding species that become non-interactive after that. First, we obtained occurrence records for these species (Global Biodiversity Information Facility- GBIF: http://www.gbif.org) and combined them with bioclimatic variables (Fick and Hijmans, 2017) to predict their current (1970-2000) and future (2050) potential distributions using the MaxEnt algorithm (Phillips et al. 2006, 2017), through the ENMWizard R package (Heming et al. 2018). This process generated two sets of multilayer SpatRaster objects, where each layer represents a binary map of climatically suitable areas for the species in the present and future under an optimistic scenario for greenhouse gas emissions, projected across the Atlantic Forest (67 layers for birds and 121 for plants). We used these SpatRaster objects along with an interaction matrix, where the rows represent plant species and the columns represent bird species. In this matrix, observed interactions between species pairs (i.e., plant-bird interactions) are indicated by the number 1. The rasters for birds and plants at present are “rasthpres” and “rastlpres” and the rasters for the future scenario are “rasterh2050opt” and “rasterl2050opt”, respectively. Users need to calculate the metrics for each temporal scenario in turn, and the arguments "rasth" and "rastl" within each function must correspond to the SpatRasters of each group in the scenario of interest. Thus, in our example, we use "rasthpres" and "rastlpres" to calculate the network metrics of interest based on the potential distribution of the species under current climate conditions. For the available future scenario, we use "rasth2050opt" and "rastl2050opt", i.e., the potential future distributions. Note that for both temporal scenarios, the known interaction matrix that underlies the spatialized calculation of potential interactions is the same as the one entered as input.
 
 ```{r}
 # load bipartite network and the raster stacks of higher level and lower level species
-rasth <- terra::rast(system.file("extdata", "rasth.tif",
-                            package="net.raster"))
-rastl <- terra::rast(system.file("extdata", "rastl.tif",
-                            package="net.raster"))
 bipnet <- read.csv(system.file("extdata", "bipnet.csv",
                                   package="net.raster"), row.names=1, sep= ";" )
+rasthpres <- terra::rast(system.file("extdata", "rasthpres.tif",
+                            package="net.raster"))
+rastlpres <- terra::rast(system.file("extdata", "rastlpres.tif",
+                            package="net.raster"))
+rasth2050opt <- terra::rast(system.file("extdata", "rasth2050opt.tif",
+                            package="net.raster"))
+rastl2050opt <- terra::rast(system.file("extdata", "rastl2050opt.tif",
+                            package="net.raster"))
 ```
 
 -   **Function** `prep.web`
 
-This function prepares raster and network data, excluding in the network the species that not interact. Also checks whether the species names of each Spatraster (higher and lower level) match the species names in the cleaned network.
+This function prepares raster and network data, excluding in the network the species that not interact. Also checks whether the species names of each Spatraster (higher and lower level) match the species names in the cleaned network. 
 
 ```{r}
 # applying the function to check species names on all data
@@ -98,11 +102,11 @@ resu
 This function calculates any of several nestedness metrics available for bipartite networks for raster data. For a time-efficient processing of spatial data, users may choose one of the nine available nestedness indices ("discrepancy", "discrepancy2", "binmatnest", "NODF", "NODF2", "C score", "checker"). Note that `net.raster` only allows unweighted calculation of bipartite network metrics. See more about the options we provide at \link[bipartite]{nested}
 
 ```{r}
-# applying the function to compute  NODF (default)
-NODF <- nested.spat (rasth, rastl, bipnet)
+# applying the function to compute  NODF (default) at present conditions
+NODF <- nested.spat (rasthpres, rastlpres, bipnet)
 plot(NODF)
-# applying the function to compute C score index
-Cscore <- nested.spat (rasth, rastl, bipnet, method = "C score")
+# applying the function to compute C score index for the future scenario
+Cscore <- nested.spat (rasth2050opt, rastl2050opt, bipnet, method = "C score")
 plot(Cscore)
 ```
 
@@ -128,17 +132,17 @@ The current available indices for species level metrics are listed bellow and us
 • ‘d’ - Blüthgen’s d’
 
 ```{r}
-# applying the function to compute closeness centrality (default metric) for lower level
-lowclos <- specieslevel.spat (rasth, rastl, bipnet, level="lower")
+# applying the function to compute closeness centrality (default metric) for lower level at present conditions
+lowclos <- specieslevel.spat (rasthpres, rastlpres, bipnet, level="lower")
 plot(lowclos)
 plot(lowclos$abuta_selloana) 
 # you can choose one species at a time for better visualization
-# calculating closeness, now for both levels (default)
-allclos <- specieslevel.spat (rasth, rastl, bipnet)
+# calculating closeness, now for both levels (default) at present conditions
+allclos <- specieslevel.spat (rasthpres, rastlpres, bipnet)
 plot(allclos$attila_rufus) # you can choose one species at a time
 plot(allclos$abuta_selloana) #of each level
-# computing normalised degree for higher level
-hignd <- specieslevel.spat (rasth, rastl, bipnet, index="normalised degree",
+# computing normalised degree for higher level for the future scenario
+hignd <- specieslevel.spat (rasth2050opt, rastl2050opt, bipnet, index="normalised degree",
 level="higher")
 plot(hignd$saltator_similis)# you can choose one species at a time
 ```
@@ -183,14 +187,14 @@ and/or those metrics invoked through "grouplevel":
 • ‘fc’ (or alternatively ‘functional complementarity’).
 
 ```{r}
-# applying the function to compute connectance (default) for both levels (default), that is, the entire network
-conn <- networklevel.spat (rasth, rastl, bipnet)
+# applying the function to compute connectance (default) for both levels (default), that is, the entire network, at present conditions
+conn <- networklevel.spat (rasthpres, rastlpres, bipnet)
 plot(conn)
-# calculating  H2 for he entire network
-webh2 <- networklevel.spat (rasth, rastl, bipnet, index="H2")
+# calculating  H2 for he entire network for the future scenario
+webh2 <- networklevel.spat (rasth2050opt, rastl2050opt, bipnet, index="H2")
 plot(webh2)
-# computing degree distribution for one group, the lower level
-lowdd <- networklevel.spat (rasth, rastl, bipnet, index="degree distribution",
+# computing degree distribution for one group, the lower level, for the future scenario
+lowdd <- networklevel.spat (rasth2050opt, rastl2050opt, bipnet, index="degree distribution",
 level="lower")
 plot(lowdd)
 ```
