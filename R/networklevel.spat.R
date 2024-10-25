@@ -129,8 +129,8 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", #weighted=F,
 #' • ‘extinction slope’,
 #' • ‘robustness’,
 #' • ‘niche overlap’,
-#' • ‘generality’,
-#' • ‘vulnerability’,
+#' • ‘generality’, which can be calculated only for the higher level,
+#' • ‘vulnerability’, which can be calculated only for the lower level,
 #' • ‘fc’ (or alternatively ‘functional complementarity’).
 #'
 #' @seealso \code{\link{prep.web}}, \code{\link{nested.spat}},

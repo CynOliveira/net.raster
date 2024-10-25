@@ -189,8 +189,8 @@ and/or those metrics invoked through "grouplevel":
 • ‘extinction slope’,
 • ‘robustness’,
 • ‘niche overlap’,
-• ‘generality’,
-• ‘vulnerability’,
+• ‘generality’, which can be calculated only for the higher level,
+• ‘vulnerability’, which can be calculated only for the lower level,
 • ‘fc’ (or alternatively ‘functional complementarity’).
 
 ```{r}
