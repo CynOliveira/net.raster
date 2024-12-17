@@ -50,7 +50,7 @@ sl_vec <- function(x, web, hlyr, index="closeness", level="both", weighted=FALSE
     return(resu)
   }
 
-  web <- web[l.pix,h.pix]
+  web <- data.frame(web[l.pix,h.pix])
 
   if(sum(web, na.rm = T)==0){
     return(resu)

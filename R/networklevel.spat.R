@@ -45,34 +45,20 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", #weighted=F,
   if(sum(h.pix, na.rm = T)==0|sum(l.pix, na.rm = T)==0)
     return(resu)
 
-  # Check if there are presences only at the lower level, but none at the higher level
-  #if (sum(h.pix, na.rm = T) == 0 & sum(l.pix, na.rm = T) > 0) {
-  #  return(resu)  # # Ignore non-species pixels from higher level
-  # }
-
-  # Check if there are presences only at the higher level, but none at the lower level
-  #if (sum(h.pix, na.rm = T) > 0 & sum(l.pix, na.rm = T) == 0) {
-  #  return(resu)  # # Ignore non-species pixels from lower level
-  #}
+  # Testing metrics that need more than one species per row or col
+  if(index %in% c("degree distribution") & (sum(h.pix, na.rm = T)<2|sum(l.pix, na.rm = T)<2))
+    return(resu)
 
   # Subset the interactions matrix for species present in the pixel
-  web <- web[l.pix,h.pix]
-
- ####### Garantir que web_subset é uma matriz com dimensões válidas
- # if (!is.matrix(web) || nrow(web) == 0 || ncol(web) == 0) {
- #   return(resu)  # Retornar NA se a matriz for inválida
- # }
+  web <- data.frame(web[l.pix,h.pix])
 
   # Ignore pixels where the resulting interactions matrix is empty
   if(sum(web, na.rm = T)==0){
     return(resu)
  }
 
- # if (index == "degree distribution" && is.matrix(networklevel.pix)) {
-
-
   networklevel.pix <- try(suppressWarnings(bipartite::networklevel(web,
-                                                  index="degree distribution", level=level,
+                                                  index=index, level=level,
                                                   #weighted=weighted,
                                                   ISAmethod=ISAmethod,
                                                   SAmethod=SAmethod ,
@@ -85,27 +71,20 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", #weighted=F,
                                                   H2_integer=H2_integer,
                                                   #fcweighted=fcweighted,
                                                   fcdist=fcdist, legacy=legacy)))
-  networklevel.pix <- networklevel.pix[[1]][1,]
-
-
+  if(index=="degree distribution"){
+    comb.nms <- expand.grid(rownames(networklevel.pix$`degree distribution.HL`),
+                            colnames(networklevel.pix$`degree distribution.HL`),
+                            c("HL", "LL"))
+    networklevel.pix <- unlist(networklevel.pix)
+    names(networklevel.pix) <- paste(comb.nms$Var3, comb.nms$Var1, comb.nms$Var2,
+                                     sep = "_")
+  } else {
+    networklevel.pix <- networklevel.pix[[1]][1,]
+  }
 
   if (!inherits(networklevel.pix, "try-error")) {
-   # if (index == "degree distribution" && is.list(networklevel.pix)) {
-    #  print("Degree distribution generated a list of tables")
-     # print(str(networklevel.pix))
 
-      # Check for valid values (other than NA) and treat as necessary
-   #   if (all(is.na(networklevel.pix$`degree distribution.HL`)) &&
-   #       all(is.na(networklevel.pix$`degree distribution.LL`))) {
-    #    print("All values are NA in the degree distribution")
-   #   } else {
-   #     resu <- networklevel.pix  # Save the complete result
-   #   }
-
-   # } else {
-      # If it is not degree distribution, save the result normally
       resu <- networklevel.pix
-    #}
   }
 
   return(resu)
@@ -248,8 +227,6 @@ networklevel.spat <- function(rh, rl, web,
                               logbase="e", intereven="prod",H2_integer=T,
                               #fcweighted=T,
                               fcdist="euclidean", legacy=F) {
-
-  #print(paste("Value of empty.web:", empty.web))
 
   pw <- prep.web(rh, rl, web)
 

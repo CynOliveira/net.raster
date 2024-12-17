@@ -41,7 +41,7 @@
 #' @author Neander Marcel Heming and Cynthia Valéria Oliveira
 
 prep.web <- function(rh, rl, web) {
-  web <- web[rowSums(web)>0, colSums(web)>0] #excluding species that not interact
+  web <- data.frame(web[rowSums(web)>0, colSums(web)>0]) #excluding species that not interact
 
   sph <- intersect(colnames(web), names(rh))
   spl <- intersect(rownames(web), names(rl))
@@ -52,7 +52,7 @@ prep.web <- function(rh, rl, web) {
 
   hlyr <- rep(c(T,F), c(length(sph),length(spl)))
 
-  return(list(web_sub=web[spl, sph], #subset of species present in raster stacks
+  return(list(web_sub=data.frame(web[spl, sph]), #subset of species present in raster stacks
               hlyr=hlyr,
               rh = rh[[sph]],
               rl = rl[[spl]]))
