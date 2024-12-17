@@ -35,9 +35,9 @@ The initial step requires combining all species distribution rasters of each tro
 
 Following the bipartite R package (Dormann et al. 2008, 2009; Dormann 2011) original features, the `net.raster` package allows users to calculate network topography indices in three different ways: a) the entire web (default) using the `networklevel.spat()` function, b) each group level, selecting either the lower or higher level in this same function through the argument “level”, or c) for each species, with the `specieslevel.spat()` function, also choosing both (default) or one level of interest (higher lower) at a time. Users can use weighted interaction matrices as input, but the `net.raster` package calculates only unweighted metrics.
 
-There are currently 15 indices that can be calculated using the function `networklevel.spat()` through the “index” argument: connectance, web specialisation (H2’), web asymmetry, links per species, linkage density, number of compartments, compartment diversity, cluster coefficient, ISA (or alternatively interaction strength asymmetry or dependence asymmetry), SA (or alternatively specialisation asymmetry), Fisher alpha, interaction evenness, Alatalo interaction evenness, and Shannon diversity. These indices are equivalent to the ones from the `networklevel()` function of the bipartite R package. Also, `networklevel.spat()` provides four metrics for nestedness, including NODF (an acronym for Nested Overlap and Decreasing Fill). Moreover, there are those metrics invoked through “grouplevel” (higher or lower trophic level): number of species in the respective trophic level, mean number of links, mean number of shared partners, degree distribution, togetherness, C score, V ratio, discrepancy, extinction slope, robustness, niche overlap, generality, vulnerability, and fc (or alternatively functional complementarity).
+The indices that can be calculated using the function `networklevel.spat()` through the “index” argument are: connectance, web specialisation (H2’), web asymmetry, links per species, linkage density, number of compartments, compartment diversity, cluster coefficient, ISA (or alternatively interaction strength asymmetry or dependence asymmetry), SA (or alternatively specialisation asymmetry), Fisher alpha, interaction evenness, Alatalo interaction evenness, and Shannon diversity. These indices are equivalent to the ones from the `networklevel()` function of the bipartite R package. Also, `networklevel.spat()` provides four metrics for nestedness, including NODF (an acronym for Nested Overlap and Decreasing Fill). Moreover, there are those metrics invoked through “grouplevel” (higher or lower trophic level): number of species in the respective trophic level, mean number of links, mean number of shared partners, degree distribution, togetherness, C score, V ratio, discrepancy, extinction slope, robustness, niche overlap, generality, vulnerability, and fc (or alternatively functional complementarity).
 
-The `specieslevel.spat()` metrics also follow arguments from the `specieslevel()` function of bipartite R package. The current 18 indices are: degree, normalised degrees, species strength, nestedrank as rank in a nested matrix, interaction push pull, PDI for Paired Differences Index, resource range, species specificity (or coefficient of variation of interactions), PSI for pollination service index (or pollinator support index, depending on the trophic level), NS for node specialisation index, betweenness, closeness, Fisher for Fisher's alpha index, partner diversity for Shannon diversity of interactions, effective partners, and d for Blüthgen's d' (Dormann et al. 2008). 
+The `specieslevel.spat()` metrics also follow arguments from the `specieslevel()` function of bipartite R package. The  indices are: degree, normalised degrees, species strength, nestedrank as rank in a nested matrix, interaction push pull, PDI for Paired Differences Index, resource range, species specificity (or coefficient of variation of interactions), PSI for pollination service index (or pollinator support index, depending on the trophic level), NS for node specialisation index, betweenness, closeness, Fisher for Fisher's alpha index, partner diversity for Shannon diversity of interactions, effective partners, and d for Blüthgen's d' (Dormann et al. 2008). 
 
 Other function provided by `net.raster` is related with an important structural network-level measure: nestedness.  The `nested.spat()` function provides additional features compared to the `networklevel.spat()` function by giving the results of other nesting metrics and expanding the possibilities based on different null models and theoretical approaches for this web property. As output, in the case of community-level functions, the raster will have as many layers as metrics were required, while the `specieslevel.spat()` function generates a layer for each species in each indicated metric. 
 
@@ -65,19 +65,20 @@ library(terra)
 ## Data processing {#data}
 In the step of pre processing, we offer support to prepares raster and network data, excluding in the network the species that not interact. The function `prep.web()`
 also checks whether the species names of each Spatraster (higher and lower level) match the species names in the cleaned network.
-In the processing step, we provide functions to calculate network topography indices using: a) the entire web, b) selecting the lower or upper level of each group, or c) selecting each species, choosing both levels or one level of interest at a time. Some indices calculated by net.raster are connectance, interaction evenness, web specialisation (H2’) and degree distribution, besides species-level metrics such as  species strength, betweenness and closeness centralities, degrees, and species specialisation (d’). `net.raster` also allows to calculate, in different ways, an important network-level structural measure, nestedness. 
+In the processing step, we provide functions to calculate network topography indices using: a) the entire web, b) selecting the lower or upper level of each group, or c) selecting each species, choosing both levels or one level of interest at a time. Some indices calculated by net.raster are connectance, interaction evenness, and web specialisation (H2’), besides species-level metrics such as  species strength, betweenness and closeness centralities, degrees, and species specialisation (d’). `net.raster` also allows to calculate, in different ways, an important network-level structural measure, nestedness. 
 Note that if a network is very small, with few nodes or links, it may be impossible to calculate the choose metric or calculated result may be unreliable.As the calculation is made with the subnet of each pixel, even in cases like this, it is possible to visualize the spatialized metric on a macroecological scale. 
 
 -   **Dataset**
 
-We demonstrate the applicability of net.raster using a real network dataset of frugivorous birds and plants recorded in the Brazilian Atlantic Forest (Silva et al. 2002), providing SpatRasters of bird and plant species for present and future climate scenarios (2050, optimistic scenario for greenhouse gas emissions). The original interaction matrix has 76 bird species and 150 plant species before the correction and consolidation of names with current and valid synonyms, and was subsetted to include  the original dataset into 67 bird species and 121 plant species. We used only a subset of the species because many of them did not have the minimum number of occurrences required
-for modelling.
+We demonstrate the applicability of net.raster using a real network dataset of frugivorous birds and plants recorded in the Brazilian Atlantic Forest (Silva et al. 2002), providing SpatRasters of bird and plant species for present and future climate scenarios (2050, optimistic scenario for greenhouse gas emissions). The original interaction matrix has 76 bird species and 150 plant species before the correction and consolidation of names with current and valid synonyms, and was subsetted to include  the original dataset into 67 bird species and 121 plant species. We used only a subset of the species because many of them did not have the minimum number of occurrences required for modelling.
 
-Therefore, we  had to exclude them and their interactions from the interactions matrix, also excluding species that become non-interactive after that. First, we obtained occurrence records for these species (Global Biodiversity Information Facility- GBIF: http://www.gbif.org) and combined them with bioclimatic variables (Fick and Hijmans, 2017) to predict their current (1970-2000) and future (2050) potential distributions using the MaxEnt algorithm (Phillips et al. 2006, 2017), through the ENMWizard R package (Heming et al. 2018). This process generated two sets of multilayer SpatRaster objects, where each layer represents a binary map of climatically suitable areas for the species in the present and future under an optimistic scenario for greenhouse gas emissions, projected across the Atlantic Forest (67 layers for birds and 121 for plants).
+Therefore, we  had to exclude them and their interactions from the interactions matrix, also excluding species that become non-interactive after that. First, we obtained occurrence records for these species (Global Biodiversity Information Facility- GBIF: http://www.gbif.org) and combined them with bioclimatic variables (Fick and Hijmans, 2017) to predict their current (1970-2000) and future (2050) potential distributions using the MaxEnt algorithm (Phillips et al. 2006, 2017), through the ENMWizard R package (Heming et al. 2018). This process generated two sets of multilayer SpatRaster objects, where each layer represents a binary map of climatically suitable areas for the species in the present and future under an optimistic scenario for greenhouse gas emissions, projected across the Atlantic Forest (67 layers for birds and 121 for plants).  
 
 We used these SpatRaster objects along with an interaction matrix, where the rows represent plant species and the columns represent bird species. In this matrix, observed interactions between species pairs (i.e., plant-bird interactions) are indicated by the number 1. The rasters for birds and plants at present are “rasthpres” and “rastlpres” and the rasters for the future scenario are “rasterh2050opt” and “rasterl2050opt”, respectively.
 
-Users need to calculate the metrics for each temporal scenario in turn, and the arguments "rasth" and "rastl" within each function must correspond to the SpatRasters of each group in the scenario of interest. Thus, in our example, we use "rasthpres" and "rastlpres" to calculate the network metrics of interest based on the potential distribution of the species under current climate conditions. For the available future scenario, we use "rasth2050opt" and "rastl2050opt", i.e., the potential future distributions. Note that for both temporal scenarios, the known interaction matrix that underlies the spatialized calculation of potential interactions is the same as the one entered as input.
+Users need to calculate the metrics for each temporal scenario in turn, and the arguments "rasth" and "rastl" within each function must correspond to the SpatRasters of each group in the scenario of interest. Thus, in our example, we use "rasthpres" and "rastlpres" to calculate the network metrics of interest based on the potential distribution of the species under current climate conditions. For the available future scenario, we use "rasth2050opt" and "rastl2050opt", i.e., the potential future distributions. Note that for both temporal scenarios, the known interaction matrix that underlies the spatialized calculation of potential interactions is the same as the one entered as input. 
+
+To optimize processing time, in our vignette we only present examples based on the current scenario and invite users to also run them for the future, if they want to compare. It will also be possible to check out our case study with results of some metrics for the present and future soon (in press).
 
 ```{r}
 # load bipartite network and the raster stacks of higher level and lower level species
@@ -91,6 +92,7 @@ rasth2050opt <- terra::rast(system.file("extdata", "rasth2050opt.tif",
                             package="net.raster"))
 rastl2050opt <- terra::rast(system.file("extdata", "rastl2050opt.tif",
                             package="net.raster"))
+# 
 ```
 
 -   **Function** `prep.web`
@@ -99,28 +101,30 @@ This function prepares raster and network data, excluding in the network the spe
 
 ```{r}
 # applying the function to check species names on all data
-resu  <- prep.web (rasth, rastl, bipnet)
+resu  <- prep.web (rasthpres, rastlpres, bipnet) #present scenario
 resu
+
+# If users want to compare present and future scenarios, remember to initially check that the entire dataset is correct.
+resufut  <- prep.web (rasth2050opt, rastl2050opt, bipnet) #future scenario
+resufut
 ```
 
 ## Analysis {#analysis}
 
 -   **Function** `nested.spat`
-This function calculates any of several nestedness metrics available for bipartite networks for raster data. For a time-efficient processing of spatial data, users may choose one of the nine available nestedness indices ("discrepancy", "discrepancy2", "binmatnest", "NODF", "NODF2", "C score", "checker"). Note that `net.raster` only allows unweighted calculation of bipartite network metrics. See more about the options we provide at \link[bipartite]{nested}
+This function calculates any of several nestedness metrics available for bipartite networks for raster data. For a time-efficient processing of spatial data, users may choose one of the nine available nestedness indices ("discrepancy", "discrepancy2", "binmatnest", "NODF", "NODF2", "C score", "checker"). However, we must inform you that the processing time may be long, as it depends on the index algorithm, the size of the network and the geographical area of the rasters, the resolution of the rasters and the processing capacity and available RAM of the machine used. You can try parallelization in data processing, speeding up execution time. Note that `net.raster` only allows unweighted calculation of bipartite network metrics. See more about the options we provide at \link[bipartite]{nested}
 
 ```{r}
 # applying the function to compute  NODF (default) at present conditions
 NODF <- nested.spat (rasthpres, rastlpres, bipnet)
 plot(NODF)
-# applying the function to compute C score index for the future scenario
-Cscore <- nested.spat (rasth2050opt, rastl2050opt, bipnet, method = "C score")
-plot(Cscore)
 ```
 
 -   **Function** `specieslevel.spat`
 This function calculates various simple numbers and indices related to network nodes (species) for raster data. You can see the spatial variation of important metrics such as species strength and centralities (closeness - default metric, betweenness, and degree). View all available indexes in Details and note that users may select one index at a time for time-efficient spatial calculation. For levels, "both" is the default, but users can also choose one level of interest at a time (higher or lower).
 Note that if a network is very small, with few nodes or links, it may be impossible to calculate the chosen metric or the calculated result may be unreliable. For example, some metrics, such as closeness and betweenness centrality, may present an error message for some pixels, but be computed over the spatial extent in all pixels where this is possible. As the calculation is made with the subnetwork of each pixel, even in these cases it is possible to visualize the spatialized metric on a macroecological scale. 
-Users may select one index at a time for time-efficient spatial calculation, there will be an error message otherwise. Also note that some indices may have a high processing time for the entire raster, depending on their algorithms, the size of the rasters and the network, and the processing capacity and available RAM of the machine used.
+Users may select one index at a time for time-efficient spatial calculation, there will be an error message otherwise. Please note that some indices may have a high processing time for the entire raster, depending on their algorithms, the size of the network and the geographical area of the rasters, the resolution of the rasters and the processing capacity and available RAM of the machine used. You can try parallelization in data processing, speeding up execution time.
+
 The current available indices for species level metrics are listed bellow and users can find more information about them at  \link[bipartite]{specieslevel}
 • ‘degree’,
 • 'normalised degree',
@@ -142,21 +146,17 @@ The current available indices for species level metrics are listed bellow and us
 # applying the function to compute closeness centrality (default metric) for lower level at present conditions
 lowclos <- specieslevel.spat (rasthpres, rastlpres, bipnet, level="lower")
 plot(lowclos)
-plot(lowclos$abuta_selloana) 
-# you can choose one species at a time for better visualization
-# calculating closeness, now for both levels (default) at present conditions
-allclos <- specieslevel.spat (rasthpres, rastlpres, bipnet)
-plot(allclos$attila_rufus) # you can choose one species at a time
-plot(allclos$abuta_selloana) #of each level
-# computing normalised degree for higher level for the future scenario
-hignd <- specieslevel.spat (rasth2050opt, rastl2050opt, bipnet, index="normalised degree",
+plot(lowclos$abuta_selloana) # you can choose one species at a time for better visualization
+
+# computing normalised degree for higher level at present conditions
+hignd <- specieslevel.spat (rasthpres, rastlpres, bipnet, index="normalised degree",
 level="higher")
 plot(hignd$saltator_similis)# you can choose one species at a time
 ```
 
 -   **Function** `networklevel.spat` 
 This function calculates various indices and values for bipartite networks on raster data. You can see the spatial variation of important metrics such as connectance, web asymmetry, network specialization (H2) and four options to compute nestedness. 
-Users may select one index at a time for time-efficient spatial calculation, being the default the "connectance". Also note that some indices may have a high processing time for the entire raster, depending on their algorithms and the processing capacity and RAM of the machine used. The current available indices for network level metrics are listed bellow and users can find more information about them at \link[bipartite]{networklevel}.
+Users may select one index at a time for time-efficient spatial calculation, being the default the "connectance". Please note that some indices may have a high processing time for the entire raster, depending on their algorithms, the size of the network and the geographical area of the rasters, the resolution of the rasters and the processing capacity and available RAM of the machine used. You can try parallelization in data processing, speeding up execution time. The current available indices for network level metrics are listed bellow and users can find more information about them at \link[bipartite]{networklevel}.
 
 There are metrics computed for the entire network:
 • ‘connectance’,
@@ -181,7 +181,6 @@ and/or those metrics invoked through "grouplevel":
 • ‘number of species’ in the respective trophic level,
 • ‘mean number of links’,
 • ‘mean number of shared partners’,
-• ‘degree distribution’,
 • ‘togetherness’,
 • ‘C score’,
 • ‘V ratio’,
@@ -197,13 +196,10 @@ and/or those metrics invoked through "grouplevel":
 # applying the function to compute connectance (default) for both levels (default), that is, the entire network, at present conditions
 conn <- networklevel.spat (rasthpres, rastlpres, bipnet)
 plot(conn)
-# calculating  H2 for he entire network for the future scenario
-webh2 <- networklevel.spat (rasth2050opt, rastl2050opt, bipnet, index="H2")
-plot(webh2)
-# computing degree distribution for one group, the lower level, for the future scenario
-lowdd <- networklevel.spat (rasth2050opt, rastl2050opt, bipnet, index="degree distribution",
-level="lower")
-plot(lowdd)
+# computing generality (specific for higher level) at present conditions
+gen <- networklevel.spat (rasthpres, rastlpres, bipnet, index="generality",
+level="higher")
+plot(gen)
 ```
 
 ## References {#references}

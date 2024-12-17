@@ -23,34 +23,56 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", #weighted=F,
   weighted = F
   fcweighted = F
 
+  #Identify presences at the higher (hlyr) and lower (!hlyr) levels
   h.pix <- x[hlyr]==1
   l.pix <- x[!hlyr]==1
 
-  resu <- NA
+  resu <- NA # Default value for pixels that do not meet the conditions
 
+  # If all values are NA in the pixel
   if(all(is.na(x))){
     return(resu)
   }
 
   x[is.na(x)] <- 0
 
+  # Ignore pixels with no presence (all 0)
   if(sum(x, na.rm = T)==0){
     return(resu)
   }
 
+  # Ignore non-species pixels in one of the levels
   if(sum(h.pix, na.rm = T)==0|sum(l.pix, na.rm = T)==0)
     return(resu)
 
-  # print(dim(web))
-  # print(c(length(l.pix), length(h.pix)))
+  # Check if there are presences only at the lower level, but none at the higher level
+  #if (sum(h.pix, na.rm = T) == 0 & sum(l.pix, na.rm = T) > 0) {
+  #  return(resu)  # # Ignore non-species pixels from higher level
+  # }
+
+  # Check if there are presences only at the higher level, but none at the lower level
+  #if (sum(h.pix, na.rm = T) > 0 & sum(l.pix, na.rm = T) == 0) {
+  #  return(resu)  # # Ignore non-species pixels from lower level
+  #}
+
+  # Subset the interactions matrix for species present in the pixel
   web <- web[l.pix,h.pix]
 
+ ####### Garantir que web_subset é uma matriz com dimensões válidas
+ # if (!is.matrix(web) || nrow(web) == 0 || ncol(web) == 0) {
+ #   return(resu)  # Retornar NA se a matriz for inválida
+ # }
+
+  # Ignore pixels where the resulting interactions matrix is empty
   if(sum(web, na.rm = T)==0){
     return(resu)
-  }
+ }
+
+ # if (index == "degree distribution" && is.matrix(networklevel.pix)) {
+
 
   networklevel.pix <- try(suppressWarnings(bipartite::networklevel(web,
-                                                  index=index, level=level,
+                                                  index="degree distribution", level=level,
                                                   #weighted=weighted,
                                                   ISAmethod=ISAmethod,
                                                   SAmethod=SAmethod ,
@@ -63,9 +85,27 @@ nl_vec <- function(x, web, hlyr, index="connectance", level="both", #weighted=F,
                                                   H2_integer=H2_integer,
                                                   #fcweighted=fcweighted,
                                                   fcdist=fcdist, legacy=legacy)))
+  networklevel.pix <- networklevel.pix[[1]][1,]
 
-  if(!inherits(networklevel.pix, "try-error")){
-    resu <- networklevel.pix
+
+
+  if (!inherits(networklevel.pix, "try-error")) {
+   # if (index == "degree distribution" && is.list(networklevel.pix)) {
+    #  print("Degree distribution generated a list of tables")
+     # print(str(networklevel.pix))
+
+      # Check for valid values (other than NA) and treat as necessary
+   #   if (all(is.na(networklevel.pix$`degree distribution.HL`)) &&
+   #       all(is.na(networklevel.pix$`degree distribution.LL`))) {
+    #    print("All values are NA in the degree distribution")
+   #   } else {
+   #     resu <- networklevel.pix  # Save the complete result
+   #   }
+
+   # } else {
+      # If it is not degree distribution, save the result normally
+      resu <- networklevel.pix
+    #}
   }
 
   return(resu)
@@ -204,10 +244,12 @@ networklevel.spat <- function(rh, rl, web,
                               index="connectance", level="both", #weighted=F,
                               ISAmethod="Bluethgen",  SAmethod = "Bluethgen",
                               extinctmethod = "r", nrep = 100, CCfun="median",
-                              dist="horn", normalise=T, empty.web=T,
+                              dist="horn", normalise=T, empty.web=TRUE,
                               logbase="e", intereven="prod",H2_integer=T,
                               #fcweighted=T,
                               fcdist="euclidean", legacy=F) {
+
+  #print(paste("Value of empty.web:", empty.web))
 
   pw <- prep.web(rh, rl, web)
 
@@ -230,3 +272,5 @@ networklevel.spat <- function(rh, rl, web,
 
   return(nlr)
 }
+
+
