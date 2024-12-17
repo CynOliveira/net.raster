@@ -143,10 +143,9 @@ The current available indices for species level metrics are listed bellow and us
 • ‘d’ - Blüthgen’s d’
 
 ```{r}
-# applying the function to compute closeness centrality (default metric) for lower level at present conditions
-lowclos <- specieslevel.spat (rasthpres, rastlpres, bipnet, level="lower")
-plot(lowclos)
-plot(lowclos$abuta_selloana) # you can choose one species at a time for better visualization
+# applying the function to compute species strength for lower level at present conditions
+lowss <- specieslevel.spat (rasthpres, rastlpres, bipnet, index = "species strength", level ="higher")
+plot(lowss$abuta_selloana) # you can choose one species at a time for better visualization
 
 # computing normalised degree for higher level at present conditions
 hignd <- specieslevel.spat (rasthpres, rastlpres, bipnet, index="normalised degree",
